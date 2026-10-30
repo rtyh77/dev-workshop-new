@@ -166,16 +166,23 @@
     return { width, height };
   }
 
-  function buildImageUrl(prompt, model, size, key) {
+  function buildImageUrl(prompt, model, size) {
     const { width, height } = parseSize(size);
     const url = new URL(API_BASE + "/image/" + encodeURIComponent(prompt));
     url.searchParams.set("model", model);
     url.searchParams.set("width", width);
     url.searchParams.set("height", height);
     url.searchParams.set("nologo", "true");
-    // The Gen API supports key authentication as a query parameter.
-    url.searchParams.set("key", key);
     return url.toString();
+  }
+
+  function explainApiError(status, body) {
+    const text = (body || "").slice(0, 700);
+    if (status === 401 || status === 403) return `رفضت الخدمة المفتاح أو صلاحياته (HTTP ${status}). تأكد من المفتاح من لوحة Pollinations. ${text}`;
+    if (status === 402) return `رصيد الحساب غير كافٍ أو يتطلب الطلب دفعاً (HTTP 402). ${text}`;
+    if (status === 429) return `طلبات كثيرة أو حد الاستخدام بلغته (HTTP 429). انتظر قليلاً ثم أعد المحاولة. ${text}`;
+    if (status === 400) return `صيغة الطلب أو النموذج غير مقبول (HTTP 400). ${text}`;
+    return `فشل طلب الصور (HTTP ${status}). ${text || "لم ترسل الخدمة تفاصيل إضافية."}`;
   }
 
   $("generateImageBtn").addEventListener("click", async () => {
@@ -196,51 +203,58 @@
     button.disabled = true;
     button.textContent = "جارٍ التوليد...";
     output.replaceChildren();
-    setStatus("imageStatus", "⏳ يتم إرسال الطلب إلى محرك الصور. قد يستغرق ذلك بعض الوقت...");
+    setStatus("imageStatus", "⏳ يتم إرسال الطلب إلى محرك الصور... قد يستغرق ذلك بعض الوقت.");
 
-    const image = new Image();
-    image.alt = "الصورة التي تم توليدها";
-    image.loading = "eager";
-    image.referrerPolicy = "no-referrer";
-    const imageUrl = buildImageUrl(finalPrompt, model, size, key);
-    currentImageUrl = imageUrl;
-
-    let finished = false;
-    const timeout = setTimeout(() => {
-      if (finished) return;
-      finished = true;
-      image.src = "";
-      setStatus("imageStatus", "انتهت مهلة الانتظار. جرّب نموذجاً أسرع أو أعد المحاولة.", "error");
-      button.disabled = false;
-      button.textContent = "توليد الصورة";
-    }, 180000);
-
-    image.onload = () => {
-      if (finished) return;
-      finished = true;
-      clearTimeout(timeout);
-      output.replaceChildren(image);
-      const download = document.createElement("a");
-      download.className = "download";
-      download.href = imageUrl;
-      download.target = "_blank";
-      download.rel = "noopener noreferrer";
-      download.textContent = "فتح الصورة بالحجم الكامل";
-      output.appendChild(download);
-      setStatus("imageStatus", "✅ اكتمل توليد الصورة. يمكنك فتحها وحفظها من المتصفح.", "ok");
-      button.disabled = false;
-      button.textContent = "توليد صورة أخرى";
-    };
-
-    image.onerror = () => {
-      if (finished) return;
-      finished = true;
-      clearTimeout(timeout);
-      setStatus("imageStatus", "❌ تعذر توليد الصورة. تحقق من المفتاح والرصيد واسم النموذج، ثم جرّب مجدداً. قد يكون السبب رفض الطلب أو ضغط الخدمة.", "error");
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 180000);
+    try {
+      const imageUrl = buildImageUrl(finalPrompt, model, size);
+      const response = await fetch(imageUrl, {
+        method: "GET",
+        headers: { "Authorization": `Bearer ${key}`, "Accept": "image/*" },
+        signal: controller.signal
+      });
+      if (!response.ok) {
+        const body = await response.text().catch(() => "");
+        throw new Error(explainApiError(response.status, body));
+      }
+      const contentType = response.headers.get("content-type") || "";
+      if (!contentType.startsWith("image/")) {
+        const body = await response.text().catch(() => "");
+        throw new Error(`ردّ الخدمة ليس صورة (${contentType || "نوع غير معروف"}). ${body.slice(0,500)}`);
+      }
+      const blob = await response.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      currentImageUrl = objectUrl;
+      const image = new Image();
+      image.alt = "الصورة التي تم توليدها";
+      image.onload = () => {
+        output.replaceChildren(image);
+        const download = document.createElement("a");
+        download.className = "download";
+        download.href = objectUrl;
+        download.download = "dev-workshop-image.png";
+        download.textContent = "حفظ الصورة";
+        output.appendChild(download);
+        setStatus("imageStatus", "✅ اكتمل توليد الصورة. اضغط حفظ الصورة لتنزيلها.", "ok");
+        button.disabled = false;
+        button.textContent = "توليد صورة أخرى";
+      };
+      image.onerror = () => {
+        URL.revokeObjectURL(objectUrl);
+        throw new Error("وصل ردّ ناجح لكن تعذّر عرض ملف الصورة.");
+      };
+      image.src = objectUrl;
+    } catch (error) {
+      const message = error.name === "AbortError"
+        ? "انتهت مهلة الانتظار (3 دقائق). جرّب نموذجاً أسرع أو أعد المحاولة."
+        : (error.message || "حدث خطأ غير معروف أثناء التوليد.");
+      setStatus("imageStatus", `❌ ${message}`, "error");
       button.disabled = false;
       button.textContent = "إعادة المحاولة";
-    };
-    image.src = imageUrl;
+    } finally {
+      clearTimeout(timeout);
+    }
   });
 
   $("generateIdeaBtn").addEventListener("click", async () => {
