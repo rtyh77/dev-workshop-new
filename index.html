@@ -14,208 +14,74 @@
       --muted: #8b949e;
       --border: #30363d;
       --green: #238636;
-      --red: #f85149;
-      --yellow: #d29922;
       --shadow: rgba(0,0,0,.3);
     }
-
     * { box-sizing: border-box; }
-
     body {
-      margin: 0;
-      padding: 16px;
-      background: var(--bg);
-      color: var(--text);
+      margin: 0; padding: 16px;
+      background: var(--bg); color: var(--text);
       font-family: system-ui, "Segoe UI", Tahoma, sans-serif;
       line-height: 1.7;
     }
-
     header {
-      max-width: 900px;
-      margin: 0 auto 24px;
-      padding: 24px 0;
-      text-align: center;
-      border-bottom: 1px solid var(--border);
+      max-width: 900px; margin: 0 auto 24px; padding: 24px 0;
+      text-align: center; border-bottom: 1px solid var(--border);
     }
-
-    header h1 {
-      margin: 0;
-      font-size: clamp(1.6rem, 5vw, 2.2rem);
-      color: var(--accent);
-    }
-
-    header p {
-      margin: 10px 0 0;
-      color: var(--muted);
-    }
-
-    .container {
-      max-width: 900px;
-      margin: auto;
-      display: grid;
-      gap: 18px;
-    }
-
+    header h1 { margin: 0; font-size: clamp(1.6rem, 5vw, 2.2rem); color: var(--accent); }
+    header p { margin: 10px 0 0; color: var(--muted); }
+    .container { max-width: 900px; margin: auto; display: grid; gap: 18px; }
     .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: clamp(16px, 4vw, 22px);
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; padding: clamp(16px, 4vw, 22px);
       box-shadow: 0 4px 12px var(--shadow);
     }
-
-    h2 {
-      margin: 0 0 10px;
-      color: var(--accent);
-      font-size: 1.35rem;
-    }
-
-    p { margin: 10px 0; }
-
-    label {
-      display: block;
-      margin: 12px 0 5px;
-      font-weight: 600;
-    }
-
+    h2 { margin: 0 0 10px; color: var(--accent); font-size: 1.35rem; }
+    label { display: block; margin: 12px 0 5px; font-weight: 600; }
     input, textarea, select {
-      width: 100%;
-      display: block;
-      padding: 12px;
-      margin: 7px 0;
-      background: #0d1117;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: white;
-      font: inherit;
-      min-width: 0;
+      width: 100%; display: block; padding: 12px; margin: 7px 0;
+      background: #0d1117; border: 1px solid var(--border);
+      border-radius: 8px; color: white; font: inherit; min-width: 0;
     }
-
-    textarea {
-      min-height: 110px;
-      resize: vertical;
-    }
-
+    textarea { min-height: 100px; resize: vertical; }
     button, .download {
-      display: inline-block;
-      background: var(--green);
-      color: white;
-      border: 0;
-      padding: 12px 18px;
-      border-radius: 8px;
-      font: inherit;
-      font-weight: 700;
-      cursor: pointer;
-      text-align: center;
-      text-decoration: none;
-      transition: .2s ease;
+      display: inline-block; background: var(--green); color: white;
+      border: 0; padding: 12px 18px; border-radius: 8px; font: inherit;
+      font-weight: 700; cursor: pointer; text-align: center; text-decoration: none;
     }
-
-    button {
-      width: 100%;
-      margin-top: 12px;
-    }
-
+    button { width: 100%; margin-top: 12px; }
     button:hover, .download:hover { filter: brightness(1.15); }
-
-    button:disabled {
-      opacity: .6;
-      cursor: wait;
-    }
-
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .note {
-      font-size: .86rem;
-      color: var(--muted);
-      margin: 5px 0;
-    }
-
+    button:disabled { opacity: .6; cursor: wait; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .note { font-size: .86rem; color: var(--muted); margin: 5px 0; }
     .status {
-      padding: 10px;
-      border-radius: 8px;
-      margin-top: 12px;
-      background: #0d1117;
-      border: 1px solid var(--border);
-      white-space: pre-wrap;
-      word-break: break-word;
+      padding: 10px; border-radius: 8px; margin-top: 12px;
+      background: #0d1117; border: 1px solid var(--border);
+      white-space: pre-wrap; word-break: break-word;
     }
-
     .status.error { color: #ff7b72; border-color: #6e3030; }
     .status.ok { color: #7ee787; }
-    .status.warn { color: #f2c66d; border-color: #7d5d1d; }
-
-    .output-box {
-      margin-top: 14px;
-      text-align: center;
-    }
-
+    .output-box { margin-top: 14px; text-align: center; }
     .output-box img {
-      display: block;
-      max-width: 100%;
-      height: auto;
-      margin: 12px auto;
-      border-radius: 10px;
-      border: 1px solid var(--border);
+      display: block; max-width: 100%; height: auto;
+      margin: 12px auto; border-radius: 10px; border: 1px solid var(--border);
     }
-
     .hidden { display: none !important; }
-
     .idea {
-      background: #0d1117;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 14px;
-      margin-top: 12px;
-      text-align: right;
-      white-space: pre-wrap;
+      background: #0d1117; border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px; margin-top: 12px;
+      text-align: right; white-space: pre-wrap;
     }
-
-    .keyline {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
+    .keyline { display: flex; gap: 8px; align-items: center; }
     .keyline input { flex: 1; }
-
-    .smallbtn {
-      width: auto;
-      margin: 7px 0;
-      padding: 9px 12px;
-      background: #30363d;
-      white-space: nowrap;
-    }
-
-    .inline-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 8px;
-    }
-
-    .inline-actions button {
-      width: auto;
-      margin-top: 0;
-      flex: 1 1 180px;
-    }
-
-    .inline-actions .download {
-      flex: 1 1 180px;
-    }
-
+    .smallbtn { width: auto; margin: 7px 0; padding: 9px 12px; background: #30363d; }
+    .inline-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+    .inline-actions button, .inline-actions .download { flex: 1 1 180px; }
     @media (max-width: 560px) {
-      body { padding: 12px; }
       .row { grid-template-columns: 1fr; }
       .keyline { display: block; }
       .smallbtn { width: 100%; }
       .inline-actions { display: block; }
-      .inline-actions button,
-      .inline-actions .download { width: 100%; margin-top: 8px; }
+      .inline-actions button, .inline-actions .download { width: 100%; margin-top: 8px; }
     }
   </style>
 </head>
@@ -230,41 +96,33 @@
 
   <section class="card">
     <h2>🔑 إعداد الاتصال</h2>
-    <p>أدخل مفتاح Pollinations API الخاص بك لتفعيل الأدوات أدناه. إذا فتحت الملف مباشرة من جهازك فقد لا تعمل بعض الخدمات، فاستخدم الموقع المنشور أو خادماً محلياً.</p>
-
+    <p>أدخل مفتاح Pollinations API الصالح لضمان تفعيل النماذج المتقدمة.</p>
     <label for="apiKey">مفتاح API</label>
     <div class="keyline">
-      <input id="apiKey" type="password" autocomplete="off" placeholder="أدخل مفتاحك هنا (sk_ أو pk_...)">
+      <input id="apiKey" type="password" autocomplete="off" placeholder="أدخل مفتاحك هنا (sk_...)">
       <button class="smallbtn" id="toggleKey" type="button">إظهار</button>
     </div>
-
-    <p class="note">يُحفظ المفتاح فقط داخل هذه الجلسة، ويُمسح عند إغلاق التبويب.</p>
-
     <div class="inline-actions">
       <button id="testApiBtn" type="button">اختبار الاتصال</button>
-      <a href="https://enter.pollinations.ai/" target="_blank" rel="noopener noreferrer" class="download">الحصول على مفتاح</a>
+      <a href="https://enter.pollinations.ai/keys" target="_blank" rel="noopener noreferrer" class="download">إنشاء مفتاح جديد</a>
     </div>
-
     <div id="keyStatus" class="status">لم يتم إدخال مفتاح بعد.</div>
   </section>
 
   <section class="card">
     <h2>🎨 مولّد الصور</h2>
-    <p>اكتب وصف الصورة بالعربية أو الإنجليزية، ويُفضّل ذكر الموضوع والمكان والإضاءة والأسلوب والتكوين.</p>
-
     <label for="imagePrompt">وصف الصورة</label>
-    <textarea id="imagePrompt" placeholder="مثال: مسجد أبيض وسط كثبان الصحراء الجزائرية وقت الغروب، إضاءة سينمائية دافئة، تصوير واقعي عالي الدقة."></textarea>
+    <textarea id="imagePrompt" placeholder="مثال: طفل يلعب في الغابة..."></textarea>
 
     <div class="row">
       <div>
         <label for="imageModel">نموذج الصور</label>
         <select id="imageModel">
-          <option value="black-forest-labs/flux.1-schnell">FLUX.1 Schnell — سريع</option>
-          <option value="google/gemini-3.1-flash-image">Gemini Flash Image — جيد للوصف</option>
-          <option value="black-forest-labs/flux.2-pro">FLUX.2 Pro — جودة أعلى</option>
+          <option value="flux">FLUX (مجاني ومستقر)</option>
+          <option value="flux-realism">FLUX Realism (واقعي)</option>
+          <option value="turbo">Turbo (سريع جداً)</option>
         </select>
       </div>
-
       <div>
         <label for="imageSize">أبعاد الصورة</label>
         <select id="imageSize">
@@ -275,27 +133,15 @@
       </div>
     </div>
 
-    <label for="imageStyle">الأسلوب (اختياري)</label>
-    <select id="imageStyle">
-      <option value="">بدون تحديد</option>
-      <option value="photorealistic, professional photography">واقعي فوتوغرافي</option>
-      <option value="cinematic lighting, cinematic composition">سينمائي</option>
-      <option value="digital illustration, highly detailed">رسم رقمي</option>
-      <option value="3D render, detailed materials">ثلاثي الأبعاد</option>
-      <option value="anime art, polished composition">أنمي</option>
-    </select>
-
     <button id="generateImageBtn" type="button">توليد الصورة</button>
-    <div id="imageStatus" class="status" aria-live="polite">جاهز لاستقبال الوصف.</div>
+    <div id="imageStatus" class="status">جاهز لاستقبال الوصف.</div>
     <div class="output-box" id="imageOutput"></div>
   </section>
 
   <section class="card">
     <h2>📝 مولّد فكرة الفيديو</h2>
-    <p>أنشئ فكرة فيديو مع عنوان، مقدمة، سيناريو، وخاتمة باللغة العربية.</p>
-
     <label for="videoTopic">موضوع الفيديو</label>
-    <input id="videoTopic" type="text" placeholder="مثال: أدوات ذكاء اصطناعي مجانية لصناع المحتوى">
+    <input id="videoTopic" type="text" placeholder="مثال: مغامرة ليلى في الغابة">
 
     <div class="row">
       <div>
@@ -303,24 +149,18 @@
         <select id="videoPlatform">
           <option>TikTok</option>
           <option>YouTube Shorts</option>
-          <option>YouTube</option>
-          <option>Facebook</option>
         </select>
       </div>
-
       <div>
         <label for="videoDuration">المدة</label>
         <select id="videoDuration">
-          <option value="30 ثانية">30 ثانية</option>
-          <option value="60 ثانية" selected>60 ثانية</option>
-          <option value="3 دقائق">3 دقائق</option>
-          <option value="5 دقائق">5 دقائق</option>
+          <option value="60 ثانية">60 ثانية</option>
         </select>
       </div>
     </div>
 
     <button id="generateIdeaBtn" type="button">إنشاء فكرة وسيناريو ذكي</button>
-    <div id="ideaStatus" class="status" aria-live="polite">أدخل موضوع الفيديو للبدء.</div>
+    <div id="ideaStatus" class="status">أدخل موضوع الفيديو للبدء.</div>
     <div id="ideaOutput" class="idea hidden"></div>
   </section>
 
@@ -330,280 +170,138 @@
 (() => {
   "use strict";
 
-  // الإصلاح الرئيسي: الدالة تقبل "#id" و "id" معاً
-  const $ = (sel) => document.getElementById(String(sel).replace(/^#/, ""));
-
-  const API_BASE = "https://gen.pollinations.ai";
+  const $ = id => document.getElementById(String(id).replace(/^#/, ""));
   const KEY_STORE = "devWorkshopSessionKey";
-  const DEFAULT_IMAGE_MODEL = "black-forest-labs/flux.1-schnell";
-  const DEFAULT_TEXT_MODEL = "openai/gpt-5.4-nano";
 
-  function setStatus(id, message, type = "") {
+  function setStatus(id, msg, type = "") {
     const el = $(id);
-    if (!el) return;
-    el.textContent = message;
-    el.className = "status" + (type ? " " + type : "");
+    if (el) { el.textContent = msg; el.className = "status " + type; }
   }
 
-  function showEnvironmentWarning() {
-    if (window.location.protocol === "file:") {
-      setStatus(
-        "keyStatus",
-        "⚠️ أنت تفتح الملف مباشرةً من الجهاز. استخدم خادماً محلياً مثل: python -m http.server 8000 ثم افتح http://localhost:8000",
-        "warn"
-      );
-    }
-  }
-
-  function normalizeKey(value) {
-    return String(value || "").trim().replace(/^Bearer\s+/i, "");
-  }
-
-  function getApiKey() {
-    const key = normalizeKey($("apiKey").value);
-    if (!key) {
-      throw new Error("أدخل مفتاح API أولاً من قسم إعداد الاتصال.");
-    }
-    return key;
-  }
-
-  function parseSize(value) {
-    const [width, height] = String(value).split("x").map(Number);
-    return { width, height };
-  }
-
-  function buildImageUrl(prompt, model, size, key) {
-    const { width, height } = parseSize(size);
-    const url = new URL(API_BASE + "/image/" + encodeURIComponent(prompt));
-    url.searchParams.set("model", model || DEFAULT_IMAGE_MODEL);
-    url.searchParams.set("width", String(width || 1024));
-    url.searchParams.set("height", String(height || 1024));
-    url.searchParams.set("nologo", "true");
-    url.searchParams.set("seed", String(Math.floor(Math.random() * 1000000)));
-    if (key) url.searchParams.set("key", key);
-    return url.toString();
-  }
-
-  function saveKeyToSession() {
-    try {
-      const key = normalizeKey($("apiKey").value);
-      if (key) {
-        sessionStorage.setItem(KEY_STORE, key);
-      } else {
-        sessionStorage.removeItem(KEY_STORE);
-      }
-    } catch (_) {}
-  }
-
-  // استرجاع المفتاح المحفوظ في الجلسة
-  try {
-    const savedKey = sessionStorage.getItem(KEY_STORE);
-    if (savedKey) {
-      $("apiKey").value = savedKey;
-      setStatus("keyStatus", "تم استرجاع المفتاح المحفوظ لهذه الجلسة.");
-    }
-  } catch (_) {}
-
-  showEnvironmentWarning();
+  const savedKey = sessionStorage.getItem(KEY_STORE);
+  if (savedKey) $("apiKey").value = savedKey;
 
   $("apiKey").addEventListener("input", () => {
-    const key = normalizeKey($("apiKey").value);
-    saveKeyToSession();
-    setStatus("keyStatus", key ? "تم حفظ المفتاح لهذه الجلسة فقط." : "لم يتم إدخال مفتاح بعد.");
+    const val = $("apiKey").value.trim();
+    if (val) sessionStorage.setItem(KEY_STORE, val);
+    else sessionStorage.removeItem(KEY_STORE);
+    setStatus("keyStatus", val ? "تم حفظ المفتاح لهذه الجلسة." : "لم يتم إدخال مفتاح بعد.");
   });
 
   $("toggleKey").addEventListener("click", () => {
-    const field = $("apiKey");
-    field.type = field.type === "password" ? "text" : "password";
-    $("toggleKey").textContent = field.type === "password" ? "إظهار" : "إخفاء";
+    const f = $("apiKey");
+    f.type = f.type === "password" ? "text" : "password";
+    $("toggleKey").textContent = f.type === "password" ? "إظهار" : "إخفاء";
   });
 
-  async function testApiConnection() {
-    const key = normalizeKey($("apiKey").value);
-
-    if (!key) {
-      setStatus("keyStatus", "أدخل مفتاح API أولاً ثم جرّب الاتصال.", "error");
-      return;
-    }
-
-    setStatus("keyStatus", "⏳ جاري اختبار الاتصال...");
-
+  // اختبار الاتصال
+  $("testApiBtn").addEventListener("click", async () => {
+    const key = $("apiKey").value.trim();
+    if (!key) return setStatus("keyStatus", "أدخل المفتاح أولاً.", "error");
+    setStatus("keyStatus", "⏳ جاري فحص المفتاح...");
     try {
-      const response = await fetch(API_BASE + "/v1/models", {
-        headers: { Authorization: "Bearer " + key }
+      const res = await fetch("https://gen.pollinations.ai/v1/models", {
+        headers: { "Authorization": "Bearer " + key }
       });
-
-      if (!response.ok) {
-        const text = await response.text().catch(() => "");
-        throw new Error(`فشل اختبار الاتصال (${response.status}). ${text.slice(0, 220)}`);
-      }
-
-      const data = await response.json();
-      const count = Array.isArray(data?.data) ? data.data.length : 0;
-      setStatus("keyStatus", `✅ الاتصال يعمل بنجاح. عدد النماذج المتاحة: ${count}`, "ok");
-    } catch (error) {
-      setStatus("keyStatus", "❌ " + (error.message || "فشل الاتصال"), "error");
+      if (res.ok) setStatus("keyStatus", "✅ المفتاح صالح والاتصال يعمل بنجاح!", "ok");
+      else setStatus("keyStatus", "❌ المفتاح غير صالح أو منتهي الصلاحية.", "error");
+    } catch (e) {
+      setStatus("keyStatus", "❌ تعذر الاتصال بالسيرفر.", "error");
     }
-  }
+  });
 
-  $("testApiBtn").addEventListener("click", testApiConnection);
-
-  // ===== توليد الصور =====
+  // توليد الصور (مباشر ومضمون)
   $("generateImageBtn").addEventListener("click", () => {
     const prompt = $("imagePrompt").value.trim();
     const output = $("imageOutput");
-    const button = $("generateImageBtn");
+    const btn = $("generateImageBtn");
 
-    if (!prompt) {
-      setStatus("imageStatus", "اكتب وصف الصورة أولاً.", "error");
-      return;
-    }
+    if (!prompt) return setStatus("imageStatus", "اكتب وصف الصورة أولاً.", "error");
 
-    let key;
-    try {
-      key = getApiKey();
-    } catch (error) {
-      setStatus("imageStatus", "❌ " + error.message, "error");
-      return;
-    }
-
-    const model = $("imageModel").value || DEFAULT_IMAGE_MODEL;
-    const size = $("imageSize").value;
-    const style = $("imageStyle").value;
-    const finalPrompt = style ? `${prompt}, ${style}` : prompt;
-
-    button.disabled = true;
-    button.textContent = "جارٍ التوليد...";
+    btn.disabled = true;
+    btn.textContent = "جاري التوليد...";
     output.replaceChildren();
-    setStatus("imageStatus", "⏳ يتم إرسال الطلب إلى محرك الصور... قد يستغرق دقيقة.");
+    setStatus("imageStatus", "⏳ جاري توليد الصورة عبر السيرفر المباشر...");
 
-    const imageUrl = buildImageUrl(finalPrompt, model, size, key);
-    const image = new Image();
-    image.alt = "Image result";
-    image.referrerPolicy = "no-referrer";
+    const model = $("imageModel").value;
+    const [w, h] = $("imageSize").value.split("x");
+    const seed = Math.floor(Math.random() * 1000000);
+    const key = $("apiKey").value.trim();
 
-    let finished = false;
+    let imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?model=${model}&width=${w}&height=${h}&seed=${seed}&nologo=true`;
+    if (key) imgUrl += `&key=${key}`;
 
-    const timeout = setTimeout(() => {
-      if (finished) return;
-      finished = true;
-      image.onload = null;
-      image.onerror = null;
-      image.src = "";
-      setStatus("imageStatus", "انتهت مهلة الانتظار. جرّب نموذجاً أسرع أو أعد المحاولة.", "error");
-      button.disabled = false;
-      button.textContent = "توليد الصورة";
-    }, 180000);
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = imgUrl;
 
-    image.onload = () => {
-      if (finished) return;
-      finished = true;
-      clearTimeout(timeout);
-
-      output.replaceChildren(image);
-
+    img.onload = () => {
+      output.replaceChildren(img);
       const link = document.createElement("a");
       link.className = "download";
-      link.href = imageUrl;
+      link.href = imgUrl;
       link.target = "_blank";
-      link.rel = "noopener noreferrer";
       link.textContent = "فتح الصورة بالحجم الكامل";
       output.appendChild(link);
-
-      setStatus("imageStatus", "✅ اكتمل توليد الصورة. يمكنك فتحها وحفظها من المتصفح.", "ok");
-      button.disabled = false;
-      button.textContent = "توليد صورة أخرى";
+      setStatus("imageStatus", "✅ تم توليد الصورة بنجاح!", "ok");
+      btn.disabled = false;
+      btn.textContent = "توليد صورة أخرى";
     };
 
-    image.onerror = () => {
-      if (finished) return;
-      finished = true;
-      clearTimeout(timeout);
-      setStatus("imageStatus", "❌ تعذر توليد الصورة. تحقق من المفتاح والرصيد والنموذج المختار، ثم جرّب مجدداً.", "error");
-      button.disabled = false;
-      button.textContent = "إعادة المحاولة";
+    img.onerror = () => {
+      setStatus("imageStatus", "❌ تعذر تحميل الصورة. جرب وصفاً آخر أو نموذجاً مختلفاً.", "error");
+      btn.disabled = false;
+      btn.textContent = "إعادة المحاولة";
     };
-
-    image.src = imageUrl;
   });
 
-  // ===== مولّد فكرة الفيديو =====
+  // توليد سيناريو الفيديو
   $("generateIdeaBtn").addEventListener("click", async () => {
     const topic = $("videoTopic").value.trim();
-    const button = $("generateIdeaBtn");
+    const key = $("apiKey").value.trim();
+    const btn = $("generateIdeaBtn");
     const output = $("ideaOutput");
 
-    if (!topic) {
-      setStatus("ideaStatus", "أدخل موضوع الفيديو أولاً.", "error");
-      return;
-    }
+    if (!topic) return setStatus("ideaStatus", "أدخل موضوع الفيديو أولاً.", "error");
+    if (!key) return setStatus("ideaStatus", "❌ يلزم إدخال مفتاح API صالح لتوليد النصوص.", "error");
 
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 90000);
+    btn.disabled = true;
+    btn.textContent = "جاري الكتابة...";
+    output.classList.add("hidden");
+    setStatus("ideaStatus", "⏳ جاري توليد السكريبت...");
 
     try {
-      const key = getApiKey();
-      const platform = $("videoPlatform").value;
-      const duration = $("videoDuration").value;
-
-      button.disabled = true;
-      button.textContent = "جارٍ إنشاء السيناريو...";
-      output.classList.add("hidden");
-      setStatus("ideaStatus", "⏳ يكتب النموذج فكرة الفيديو والسكريبت...");
-
-      const requestBody = {
-        model: DEFAULT_TEXT_MODEL,
-        messages: [
-          {
-            role: "system",
-            content: "أنت كاتب محتوى عربي محترف. اكتب بالعربية الواضحة وبأسلوب عملي ومناسب لصناع المحتوى. لا تخترع حقائق أو أرقام غير مؤكدة. اكتب بتنسيق واضح وقابل للتنفيذ، مع عنوان جذاب، مقدمة قصيرة، نقاط رئيسية، سيناريو متدرج، وخاتمة قوية."
-          },
-          {
-            role: "user",
-            content: `أنشئ فكرة وسيناريو لفيديو عن: ${topic}\nالمنصة: ${platform}\nالمدة: ${duration}\nاجعل النص قابلاً للتنفيذ، عملياً، وبأسلوب عربي احترافي ومناسب للمحتوى الرقمي.`
-          }
-        ],
-        temperature: 0.8,
-        max_tokens: 1200
-      };
-
-      const response = await fetch(API_BASE + "/v1/chat/completions", {
+      const res = await fetch("https://text.pollinations.ai/", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + key
-        },
-        body: JSON.stringify(requestBody),
-        signal: controller.signal
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: [
+            { role: "system", content: "أنت كاتب محتوى عربي محترف." },
+            { role: "user", content: `اكتب فكرة وسيناريو قصير عن: ${topic}` }
+          ],
+          model: "openai",
+          code: key
+        })
       });
 
-      if (!response.ok) {
-        const detail = await response.text().catch(() => "");
-        throw new Error(`فشل الطلب (${response.status}). ${detail.slice(0, 240)}`);
+      const text = await res.text();
+      if (res.ok && text) {
+        output.textContent = text;
+        output.classList.remove("hidden");
+        setStatus("ideaStatus", "✅ تم إنشاء السيناريو بنجاح!", "ok");
+      } else {
+        throw new Error(text || "خطأ في المفتاح");
       }
-
-      const data = await response.json();
-      const text = data?.choices?.[0]?.message?.content;
-      if (!text) {
-        throw new Error("وصل رد غير متوقع من النموذج.");
-      }
-
-      output.textContent = text;
-      output.classList.remove("hidden");
-      setStatus("ideaStatus", "✅ تم إنشاء السيناريو بنجاح.", "ok");
-    } catch (error) {
-      const message = error.name === "AbortError"
-        ? "انتهت مهلة الطلب. حاول مجدداً."
-        : (error.message || "حدث خطأ غير متوقع.");
-      setStatus("ideaStatus", "❌ " + message, "error");
+    } catch (e) {
+      setStatus("ideaStatus", "❌ فشل الطلب. تأكد من حصولك على مفتاح جديد من الرابط أعلاه.", "error");
     } finally {
-      clearTimeout(timeout);
-      button.disabled = false;
-      button.textContent = "إنشاء فكرة وسيناريو ذكي";
+      btn.disabled = false;
+      btn.textContent = "إنشاء فكرة وسيناريو ذكي";
     }
   });
+
 })();
 </script>
 
 </body>
-        </html>
+</html>
