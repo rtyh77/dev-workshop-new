@@ -917,6 +917,7 @@ $("hfBtn").addEventListener("click", async () => {
 
     setStatus("hfStatus", "⏳ تم إرسال الطلب…");
     let result = null;
+    const logs = [];
     const job = client.submit(ep, args);
     for await (const msg of job) {
       if (msg.type === "status") {
@@ -924,11 +925,18 @@ $("hfBtn").addEventListener("click", async () => {
         const q = msg.position != null ? `\nالترتيب في الطابور: ${msg.position + 1}` : "";
         setStatus("hfStatus", "⏳ " + (msg.stage === "generating" ? "جارٍ التوليد…" : "بانتظار الدور…") + q +
           "\nقد يستغرق ذلك عدة دقائق. لا تغلق الصفحة.");
+      } else if (msg.type === "log") {
+        logs.push(msg.title ? msg.title + ": " + msg.log : String(msg.log || ""));
       } else if (msg.type === "data") result = msg.data;
     }
 
     const url = findUrl(result);
-    if (!url) throw new Error("لم يرجع الـ Space فيديو. جرّب واجهة أخرى من القائمة.");
+    if (!url) {
+      const detail = logs.filter(Boolean).join("\n").slice(0, 300);
+      throw new Error("لم يرجع الـ Space فيديو." +
+        (detail ? "\nرسالة الـ Space: " + detail : "") +
+        "\nالاستجابة: " + JSON.stringify(result).slice(0, 120));
+    }
 
     const video = document.createElement("video");
     video.src = url; video.controls = true; video.playsInline = true; video.style.width = "100%";
@@ -941,7 +949,7 @@ $("hfBtn").addEventListener("click", async () => {
 
   } catch (e) {
     const m = getErrorMessage(e);
-    const quota = /quota|gpu|limit|exceeded|429/i.test(m + JSON.stringify(e || ""));
+    const quota = /quota|gpu|limit|exceeded|429|zerogpu|unlogged|sign in|login/i.test(m + JSON.stringify(e || ""));
     setStatus("hfStatus", "❌ فشل التوليد: " + m +
       (quota ? "\n💡 انتهت حصتك المجانية اليوم. سجّل الدخول بحساب Hugging Face (إن كان متاحًا)، أو جرّب Space آخر، أو استخدم قسم «فيديو من عدة صور»."
              : "\nجرّب واجهة أخرى من القائمة أو Space آخر."), "error");
