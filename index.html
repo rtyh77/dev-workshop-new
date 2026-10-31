@@ -875,6 +875,9 @@ $("hfScanBtn").addEventListener("click", async () => {
   } finally { btn.disabled = false; }
 });
 
+// أبعاد (عرض، ارتفاع) مضاعفات 64 ضمن حد 1024 المعتاد في هذه الـ Spaces
+const HF_SIZES = { "9:16": [576, 1024], "16:9": [1024, 576], "1:1": [768, 768] };
+
 function findUrl(x) {
   if (!x || typeof x !== "object") return "";
   if (typeof x.url === "string" && x.url) return x.url;
@@ -909,6 +912,12 @@ $("hfBtn").addEventListener("click", async () => {
         } else if (!isEnd && !p.parameter_has_default && !selectedVideoImage) {
           throw new Error("هذه الواجهة تتطلب صورة مرجعية (الإطار الأول). ارفع صورة في قسم «صانع الفيديو» أعلاه ثم أعد المحاولة.");
         }
+      } else if (/duration|second|length/.test(name) && !/frame/.test(name)) {
+        v = Number($("videoDuration").value);
+      } else if (/height/.test(name)) {
+        v = HF_SIZES[$("videoRatio").value][1];
+      } else if (/width/.test(name)) {
+        v = HF_SIZES[$("videoRatio").value][0];
       } else if (!promptUsed && /prompt|text|desc/.test(name) && !/negative/.test(name)) {
         v = prompt; promptUsed = true;
       }
