@@ -247,6 +247,36 @@ button:disabled{opacity:.6;cursor:wait}
   <div class="output-box" id="videoOutput"></div>
 </section>
 
+<!-- فيديو حقيقي عبر Hugging Face Spaces -->
+<section class="card">
+  <h2>🤗 فيديو ذكاء اصطناعي عبر Hugging Face <span class="free">مجاني بحصة يومية</span></h2>
+
+  <p>
+    يستخدم الوصف والصورة المرجعية المكتوبين في قسم «صانع الفيديو» أعلاه.
+    يعمل بدون تسجيل بحصة الزائر المجانية، وتسجيل الدخول بحساب Hugging Face (إن فعّلته) يرفع الحصة غالبًا.
+    قد تظهر طوابير انتظار، وأسماء الـ Spaces تتغير أو تتوقف أحيانًا.
+  </p>
+
+  <div class="authrow">
+    <button id="hfLoginBtn" type="button" class="hidden">🤗 دخول بحساب Hugging Face</button>
+    <button id="hfLogoutBtn" type="button" class="smallbtn hidden">خروج</button>
+  </div>
+
+  <label for="hfSpace">اسم الـ Space (مالك/اسم)</label>
+  <input id="hfSpace" list="hfList" value="alexnasa/ltx-2-TURBO" dir="ltr">
+  <datalist id="hfList">
+    <option value="alexnasa/ltx-2-TURBO">
+    <option value="Lightricks/ltx-video-distilled">
+  </datalist>
+
+  <button id="hfScanBtn" type="button" class="smallbtn">🔍 فحص الـ Space واختيار الواجهة</button>
+  <select id="hfEndpoint" class="hidden" dir="ltr"></select>
+
+  <button id="hfBtn" type="button">🎥 توليد الفيديو عبر Hugging Face</button>
+  <div id="hfStatus" class="status" aria-live="polite">اكتب الوصف في قسم الفيديو أعلاه، ثم اضغط «فحص» مرة واحدة، ثم «توليد».</div>
+  <div class="output-box" id="hfOutput"></div>
+</section>
+
 <!-- فيديو من عدة صور (مجاني) -->
 <section class="card">
   <h2>🎞️ فيديو من عدة صور <span class="free">مجاني وبلا حد</span></h2>
@@ -728,6 +758,158 @@ $("generateVideoBtn").addEventListener("click", async () => {
 /* ============================
    فيديو من عدة صور (مجاني، داخل المتصفح)
 ============================ */
+
+/* ============================
+   Hugging Face Spaces (Gradio)
+============================ */
+
+// ضع هنا Client ID لتطبيق OAuth من huggingface.co/settings/applications/new
+// واتركه فارغًا لاستخدام الحصة المجانية بدون تسجيل دخول.
+const HF_CLIENT_ID = "";
+const GRADIO_URL = "https://esm.sh/@gradio/client@1.15.1";
+const HUB_URL = "https://esm.sh/@huggingface/hub@1.1.2";
+
+let hfToken = "", hfClient = null, hfKey = "", hfApi = null;
+try { hfToken = sessionStorage.getItem("hf_token") || ""; } catch (e) {}
+
+function hfUI() {
+  $("hfLoginBtn").classList.toggle("hidden", !HF_CLIENT_ID || !!hfToken);
+  $("hfLogoutBtn").classList.toggle("hidden", !hfToken);
+}
+
+(async () => {
+  if (HF_CLIENT_ID) {
+    try {
+      const { oauthHandleRedirectIfPresent } = await import(HUB_URL);
+      const r = await oauthHandleRedirectIfPresent();
+      if (r?.accessToken) {
+        hfToken = r.accessToken;
+        try { sessionStorage.setItem("hf_token", hfToken); } catch (e) {}
+      }
+    } catch (e) {}
+  }
+  hfUI();
+})();
+
+$("hfLoginBtn").addEventListener("click", async () => {
+  try {
+    const { oauthLoginUrl } = await import(HUB_URL);
+    location.href = await oauthLoginUrl({
+      clientId: HF_CLIENT_ID,
+      redirectUrl: location.origin + location.pathname,
+      scopes: "openid profile"
+    });
+  } catch (e) {
+    setStatus("hfStatus", "❌ تعذّر فتح تسجيل Hugging Face: " + getErrorMessage(e), "error");
+  }
+});
+
+$("hfLogoutBtn").addEventListener("click", () => {
+  hfToken = ""; hfClient = null; hfKey = "";
+  try { sessionStorage.removeItem("hf_token"); } catch (e) {}
+  hfUI();
+});
+
+async function hfConnect() {
+  const id = $("hfSpace").value.trim();
+  if (!/^[\w.-]+\/[\w.-]+$/.test(id)) throw new Error("اكتب اسم الـ Space بصيغة مالك/اسم.");
+  if (hfClient && hfKey === id + hfToken) return hfClient;
+  const { Client } = await import(GRADIO_URL);
+  hfClient = await Client.connect(id, hfToken ? { hf_token: hfToken } : {});
+  hfKey = id + hfToken;
+  hfApi = await hfClient.view_api();
+  return hfClient;
+}
+
+$("hfScanBtn").addEventListener("click", async () => {
+  const btn = $("hfScanBtn"), sel = $("hfEndpoint");
+  btn.disabled = true;
+  setStatus("hfStatus", "⏳ جارٍ الاتصال بالـ Space وقراءة واجهته…");
+  try {
+    await hfConnect();
+    const names = Object.keys(hfApi?.named_endpoints || {});
+    if (!names.length) throw new Error("لا توجد واجهات عامة في هذا الـ Space.");
+    sel.replaceChildren(...names.map(n => new Option(
+      n + " (" + hfApi.named_endpoints[n].parameters.map(p => p.parameter_name).join(", ") + ")", n)));
+    const best = names.find(n => /video|generate|t2v|i2v/i.test(n));
+    if (best) sel.value = best;
+    sel.classList.remove("hidden");
+    setStatus("hfStatus", "✅ تم الاتصال. اختر الواجهة المناسبة (غالبًا generate) ثم اضغط توليد.", "ok");
+  } catch (e) {
+    hfClient = null;
+    setStatus("hfStatus", "❌ تعذّر الاتصال: " + getErrorMessage(e) +
+      "\nقد يكون الـ Space متوقفًا أو نائمًا. جرّب اسمًا آخر.", "error");
+  } finally { btn.disabled = false; }
+});
+
+function findUrl(x) {
+  if (!x || typeof x !== "object") return "";
+  if (typeof x.url === "string" && x.url) return x.url;
+  for (const v of Object.values(x)) { const u = findUrl(v); if (u) return u; }
+  return "";
+}
+
+$("hfBtn").addEventListener("click", async () => {
+  const prompt = $("videoPrompt").value.trim();
+  if (!prompt) { setStatus("hfStatus", "اكتب وصف الفيديو في قسم «صانع الفيديو» أعلاه.", "error"); return; }
+
+  const btn = $("hfBtn"), output = $("hfOutput");
+  btn.disabled = true;
+  output.replaceChildren();
+  try {
+    setStatus("hfStatus", "⏳ جارٍ الاتصال…");
+    const client = await hfConnect();
+    const ep = $("hfEndpoint").value || Object.keys(hfApi.named_endpoints)[0];
+    const { handle_file } = await import(GRADIO_URL);
+    const args = {};
+    let promptUsed = false;
+
+    for (const p of hfApi.named_endpoints[ep].parameters) {
+      const name = (p.parameter_name + " " + (p.label || "")).toLowerCase();
+      const comp = (p.component || "").toLowerCase();
+      if (/image|file|video/.test(comp) && !/audio/.test(comp)) {
+        if (selectedVideoImage) args[p.parameter_name] = handle_file(selectedVideoImage);
+        else if (p.parameter_has_default) args[p.parameter_name] = p.parameter_default;
+        else args[p.parameter_name] = null;
+      } else if (!promptUsed && /prompt|text|desc/.test(name) && !/negative/.test(name)) {
+        args[p.parameter_name] = prompt; promptUsed = true;
+      } else if (p.parameter_has_default) {
+        args[p.parameter_name] = p.parameter_default;
+      }
+    }
+
+    setStatus("hfStatus", "⏳ تم إرسال الطلب…");
+    let result = null;
+    const job = client.submit(ep, args);
+    for await (const msg of job) {
+      if (msg.type === "status") {
+        if (msg.stage === "error") throw new Error(msg.message || "فشل الـ Space.");
+        const q = msg.position != null ? `\nالترتيب في الطابور: ${msg.position + 1}` : "";
+        setStatus("hfStatus", "⏳ " + (msg.stage === "generating" ? "جارٍ التوليد…" : "بانتظار الدور…") + q +
+          "\nقد يستغرق ذلك عدة دقائق. لا تغلق الصفحة.");
+      } else if (msg.type === "data") result = msg.data;
+    }
+
+    const url = findUrl(result);
+    if (!url) throw new Error("لم يرجع الـ Space فيديو. جرّب واجهة أخرى من القائمة.");
+
+    const video = document.createElement("video");
+    video.src = url; video.controls = true; video.playsInline = true; video.style.width = "100%";
+    output.appendChild(video);
+    const link = document.createElement("a");
+    link.className = "download"; link.href = url; link.target = "_blank"; link.rel = "noopener";
+    link.textContent = "فتح / حفظ الفيديو";
+    output.appendChild(link);
+    setStatus("hfStatus", "✅ اكتمل التوليد. الروابط مؤقتة، فاحفظ الفيديو بسرعة.", "ok");
+
+  } catch (e) {
+    const m = getErrorMessage(e);
+    const quota = /quota|gpu|limit|exceeded|429/i.test(m + JSON.stringify(e || ""));
+    setStatus("hfStatus", "❌ فشل التوليد: " + m +
+      (quota ? "\n💡 انتهت حصتك المجانية اليوم. سجّل الدخول بحساب Hugging Face (إن كان متاحًا)، أو جرّب Space آخر، أو استخدم قسم «فيديو من عدة صور»."
+             : "\nجرّب واجهة أخرى من القائمة أو Space آخر."), "error");
+  } finally { btn.disabled = false; }
+});
 
 const VDIM = { "9:16": [540, 960], "16:9": [960, 540], "1:1": [720, 720] };
 
