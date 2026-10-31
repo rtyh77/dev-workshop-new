@@ -8,187 +8,75 @@
 
 <style>
 :root{
-  --bg:#0d1117;
-  --card:#161b22;
-  --accent:#58a6ff;
-  --text:#c9d1d9;
-  --muted:#8b949e;
-  --border:#30363d;
-  --green:#238636;
-  --red:#f85149;
+  --bg:#0d1117;--card:#161b22;--accent:#58a6ff;
+  --text:#c9d1d9;--muted:#8b949e;--border:#30363d;
+  --green:#238636;--red:#f85149;
 }
-
 *{box-sizing:border-box}
-
 body{
   font-family:system-ui,"Segoe UI",Tahoma,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  margin:0;
-  padding:16px;
-  line-height:1.7;
+  background:var(--bg);color:var(--text);
+  margin:0;padding:16px;line-height:1.7
 }
-
 header{
-  text-align:center;
-  padding:24px 0;
+  text-align:center;padding:24px 0;
   border-bottom:1px solid var(--border);
-  margin:0 auto 24px;
-  max-width:900px;
+  margin:0 auto 24px;max-width:900px
 }
-
 header h1{
-  color:var(--accent);
-  margin:0;
-  font-size:clamp(1.6rem,5vw,2.2rem);
+  color:var(--accent);margin:0;
+  font-size:clamp(1.6rem,5vw,2.2rem)
 }
-
 header p,.muted,.note{color:var(--muted)}
-
-.container{
-  max-width:900px;
-  margin:auto;
-  display:grid;
-  gap:18px;
-}
-
+.container{max-width:900px;margin:auto;display:grid;gap:18px}
 .card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:clamp(16px,4vw,22px);
-  box-shadow:0 4px 12px #0003;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:clamp(16px,4vw,22px);
+  box-shadow:0 4px 12px #0003
 }
-
-h2{
-  color:var(--accent);
-  font-size:1.35rem;
-  margin:0 0 10px;
-}
-
-label{
-  display:block;
-  margin:12px 0 5px;
-  font-weight:600;
-}
-
+h2{color:var(--accent);font-size:1.35rem;margin:0 0 10px}
+label{display:block;margin:12px 0 5px;font-weight:600}
 input,textarea,select{
-  display:block;
-  width:100%;
-  padding:12px;
-  margin:7px 0;
-  background:#0d1117;
-  border:1px solid var(--border);
-  color:#fff;
-  border-radius:8px;
-  font:inherit;
-  min-width:0;
+  display:block;width:100%;padding:12px;margin:7px 0;
+  background:#0d1117;border:1px solid var(--border);
+  color:#fff;border-radius:8px;font:inherit;min-width:0
 }
-
-textarea{
-  min-height:100px;
-  resize:vertical;
-}
-
+textarea{min-height:100px;resize:vertical}
 button,.download{
-  display:inline-block;
-  background:var(--green);
-  color:white;
-  border:0;
-  padding:12px 18px;
-  border-radius:8px;
-  font:inherit;
-  font-weight:700;
-  cursor:pointer;
-  text-align:center;
-  text-decoration:none;
+  display:inline-block;background:var(--green);color:white;
+  border:0;padding:12px 18px;border-radius:8px;
+  font:inherit;font-weight:700;cursor:pointer;
+  text-align:center;text-decoration:none
 }
-
-button{
-  width:100%;
-  margin-top:12px;
-}
-
+button{width:100%;margin-top:12px}
 button:hover,.download:hover{filter:brightness(1.15)}
-
-button:disabled{
-  opacity:.6;
-  cursor:wait;
-}
-
-.row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
-.note{
-  font-size:.86rem;
-  margin:5px 0;
-}
-
+button:disabled{opacity:.6;cursor:wait}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.note{font-size:.86rem;margin:5px 0}
 .status{
-  padding:10px;
-  border-radius:8px;
-  margin-top:12px;
-  background:#0d1117;
-  border:1px solid var(--border);
-  white-space:pre-wrap;
-  overflow-wrap:anywhere;
+  padding:10px;border-radius:8px;margin-top:12px;
+  background:#0d1117;border:1px solid var(--border);
+  white-space:pre-wrap;overflow-wrap:anywhere
 }
-
-.status.error{
-  color:#ff7b72;
-  border-color:#6e3030;
-}
-
+.status.error{color:#ff7b72;border-color:#6e3030}
 .status.ok{color:#7ee787}
-
-.output-box{
-  margin-top:14px;
-  text-align:center;
+.output-box{margin-top:14px;text-align:center}
+.output-box img,.output-box video{
+  display:block;max-width:100%;height:auto;
+  margin:12px auto;border-radius:10px;
+  border:1px solid var(--border)
 }
-
-.output-box img{
-  display:block;
-  max-width:100%;
-  height:auto;
-  margin:12px auto;
-  border-radius:10px;
-  border:1px solid var(--border);
-}
-
+.output-box video{width:100%;background:#000}
 .hidden{display:none!important}
-
 .idea{
-  background:#0d1117;
-  border:1px solid var(--border);
-  border-radius:8px;
-  padding:14px;
-  text-align:right;
-  white-space:pre-wrap;
-  overflow-wrap:anywhere;
+  background:#0d1117;border:1px solid var(--border);
+  border-radius:8px;padding:14px;text-align:right;
+  white-space:pre-wrap;overflow-wrap:anywhere
 }
-
-.authrow{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  flex-wrap:wrap;
-}
-
-.authrow button{
-  width:auto;
-  flex:1;
-}
-
-.smallbtn{
-  width:auto;
-  margin:7px 0;
-  padding:9px 12px;
-  background:#30363d;
-}
-
+.authrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.authrow button{width:auto;flex:1}
+.smallbtn{width:auto;margin:7px 0;padding:9px 12px;background:#30363d}
+.preview-image{max-width:100%;max-height:320px;border-radius:8px;margin-top:10px}
 @media(max-width:560px){
   body{padding:12px}
   .row{grid-template-columns:1fr}
@@ -212,17 +100,12 @@ button:disabled{
 
   <p>
     سجّل الدخول عبر Puter لاستخدام أدوات الذكاء الاصطناعي دون إدخال مفتاح API
-    في هذا الموقع. قد تختلف النماذج والحصة المجانية حسب حسابك وسياسة الخدمة.
+    في هذا الموقع. تختلف النماذج والحصة والتكلفة حسب حسابك وسياسة الخدمة.
   </p>
 
   <div class="authrow">
-    <button id="signInBtn" type="button">
-      تسجيل الدخول / إنشاء حساب
-    </button>
-
-    <button id="signOutBtn" class="smallbtn hidden" type="button">
-      تسجيل الخروج
-    </button>
+    <button id="signInBtn" type="button">تسجيل الدخول / إنشاء حساب</button>
+    <button id="signOutBtn" class="smallbtn hidden" type="button">تسجيل الخروج</button>
   </div>
 
   <div id="authStatus" class="status" aria-live="polite">
@@ -245,35 +128,21 @@ button:disabled{
   </p>
 
   <label for="imagePrompt">وصف الصورة</label>
-
-  <textarea
-    id="imagePrompt"
-    placeholder="مثال: مسجد أبيض وسط كثبان الصحراء الجزائرية وقت الغروب، إضاءة سينمائية دافئة، تصوير واقعي عالي التفاصيل..."
-  ></textarea>
+  <textarea id="imagePrompt"
+    placeholder="مثال: مسجد أبيض وسط كثبان الصحراء الجزائرية وقت الغروب، إضاءة سينمائية دافئة، تصوير واقعي عالي التفاصيل..."></textarea>
 
   <div class="row">
-
     <div>
       <label for="imageModel">نموذج الصور</label>
-
       <select id="imageModel">
-        <option value="gemini-3.1-flash-image">
-          Gemini 3.1 Flash Image (موصى به)
-        </option>
-
-        <option value="gemini-3-pro-image">
-          Gemini 3 Pro Image
-        </option>
-
-        <option value="gpt-image-2">
-          GPT Image 2
-        </option>
+        <option value="gemini-3.1-flash-image">Gemini 3.1 Flash Image</option>
+        <option value="gemini-3-pro-image">Gemini 3 Pro Image</option>
+        <option value="gpt-image-2">GPT Image 2</option>
       </select>
     </div>
 
     <div>
       <label for="imageSize">أبعاد الصورة</label>
-
       <select id="imageSize">
         <option value="1:1">مربع 1:1</option>
         <option value="2:3">عمودي 2:3</option>
@@ -282,11 +151,9 @@ button:disabled{
         <option value="16:9">أفقي 16:9</option>
       </select>
     </div>
-
   </div>
 
   <label for="imageStyle">الأسلوب (اختياري)</label>
-
   <select id="imageStyle">
     <option value="">بدون تحديد</option>
     <option value="photorealistic, professional photography">واقعي فوتوغرافي</option>
@@ -296,15 +163,81 @@ button:disabled{
     <option value="anime art, polished composition">أنمي</option>
   </select>
 
-  <button id="generateImageBtn" type="button">
-    توليد الصورة
-  </button>
+  <button id="generateImageBtn" type="button">توليد الصورة</button>
+  <div id="imageStatus" class="status" aria-live="polite">سجّل الدخول ثم اكتب وصفاً للبدء.</div>
+  <div class="output-box" id="imageOutput"></div>
+</section>
 
-  <div id="imageStatus" class="status" aria-live="polite">
-    سجّل الدخول ثم اكتب وصفاً للبدء.
+<!-- مولّد الفيديو الجديد -->
+<section class="card">
+  <h2>🎬 صانع الفيديو بالذكاء الاصطناعي</h2>
+
+  <p>
+    أنشئ مقطعًا قصيرًا من وصف نصي، أو ارفع صورة لتكون الإطار الأول للفيديو.
+    اكتب الحركة المطلوبة وحركة الكاميرا والمزاج البصري للحصول على نتيجة أدق.
+  </p>
+
+  <div class="status">
+    ℹ️ تنبيه: توفر النماذج والحصة المجانية يتغير حسب حساب Puter.
+    لا يوجد ضمان ثابت لفيديوهين مجانيين يوميًا. تحقق من أي تكلفة أو حد يظهر لك قبل الاستخدام.
   </div>
 
-  <div class="output-box" id="imageOutput"></div>
+  <label for="videoPrompt">وصف الفيديو والحركة</label>
+  <textarea id="videoPrompt"
+    placeholder="مثال: طفل يركض بسعادة في غابة خضراء، أوراق الأشجار تتحرك مع النسيم، الكاميرا تتبعه ببطء، إضاءة صباحية سينمائية، حركة طبيعية وواقعية..."></textarea>
+
+  <label for="videoImage">صورة مرجعية (اختياري — صورة ← فيديو)</label>
+  <input id="videoImage" type="file" accept="image/png,image/jpeg,image/webp">
+
+  <div id="videoImagePreview"></div>
+
+  <div class="row">
+    <div>
+      <label for="videoModel">نموذج الفيديو</label>
+      <select id="videoModel">
+        <option value="togetherai:wan-ai/wan2.7-t2v">Wan 2.7 — نص إلى فيديو</option>
+        <option value="togetherai:wan-ai/wan2.7-i2v">Wan 2.7 — صورة إلى فيديو</option>
+        <option value="kling-video-generation:kling-3.0-turbo">Kling 3.0 Turbo</option>
+        <option value="minimax-video-generation:minimax-h3">MiniMax H3</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="videoDuration">مدة المقطع</label>
+      <select id="videoDuration">
+        <option value="5">5 ثوانٍ</option>
+        <option value="8">8 ثوانٍ</option>
+        <option value="10">10 ثوانٍ</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row">
+    <div>
+      <label for="videoResolution">الدقة</label>
+      <select id="videoResolution">
+        <option value="720p">720p — موصى بها</option>
+        <option value="1080p">1080p — أعلى</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="videoRatio">اتجاه الفيديو</label>
+      <select id="videoRatio">
+        <option value="9:16">عمودي 9:16 — TikTok / Shorts</option>
+        <option value="16:9">أفقي 16:9 — YouTube</option>
+        <option value="1:1">مربع 1:1</option>
+      </select>
+    </div>
+  </div>
+
+  <button id="generateVideoBtn" type="button">🎥 توليد الفيديو</button>
+
+  <div id="videoStatus" class="status" aria-live="polite">
+    سجّل الدخول، ثم اكتب وصفًا أو اختر صورة مرجعية.
+  </div>
+
+  <div class="output-box" id="videoOutput"></div>
 </section>
 
 <!-- مولّد السيناريو -->
@@ -316,18 +249,12 @@ button:disabled{
   </p>
 
   <label for="videoTopic">موضوع الفيديو</label>
-
-  <input
-    id="videoTopic"
-    type="text"
-    placeholder="مثال: أدوات ذكاء اصطناعي مجانية لصناع المحتوى"
-  >
+  <input id="videoTopic" type="text"
+    placeholder="مثال: أدوات ذكاء اصطناعي مجانية لصناع المحتوى">
 
   <div class="row">
-
     <div>
       <label for="videoPlatform">المنصة</label>
-
       <select id="videoPlatform">
         <option>TikTok</option>
         <option>YouTube Shorts</option>
@@ -337,26 +264,18 @@ button:disabled{
     </div>
 
     <div>
-      <label for="videoDuration">المدة</label>
-
-      <select id="videoDuration">
+      <label for="scriptDuration">مدة السيناريو</label>
+      <select id="scriptDuration">
         <option value="30 ثانية">30 ثانية</option>
         <option value="60 ثانية" selected>60 ثانية</option>
         <option value="3 دقائق">3 دقائق</option>
         <option value="5 دقائق">5 دقائق</option>
       </select>
     </div>
-
   </div>
 
-  <button id="generateIdeaBtn" type="button">
-    إنشاء فكرة وسيناريو ذكي
-  </button>
-
-  <div id="ideaStatus" class="status" aria-live="polite">
-    أدخل موضوع الفيديو للبدء.
-  </div>
-
+  <button id="generateIdeaBtn" type="button">إنشاء فكرة وسيناريو ذكي</button>
+  <div id="ideaStatus" class="status" aria-live="polite">أدخل موضوع الفيديو للبدء.</div>
   <div id="ideaOutput" class="idea hidden"></div>
 </section>
 
@@ -366,265 +285,342 @@ button:disabled{
 
 <script>
 (() => {
-  "use strict";
+"use strict";
 
-  const $ = id => document.getElementById(id);
+const $ = id => document.getElementById(id);
 
-  function setStatus(id, message, type = "") {
-    const el = $(id);
-    el.textContent = message;
-    el.className = "status" + (type ? " " + type : "");
+function setStatus(id, message, type = "") {
+  const el = $(id);
+  el.textContent = message;
+  el.className = "status" + (type ? " " + type : "");
+}
+
+function getErrorMessage(error) {
+  if (error?.message) return error.message;
+  if (typeof error === "string") return error;
+  return "حدث خطأ غير معروف.";
+}
+
+function isSignedIn() {
+  try {
+    return !!(window.puter && puter.auth.isSignedIn());
+  } catch (error) {
+    return false;
+  }
+}
+
+async function refreshAuth() {
+  if (!window.puter) {
+    setStatus("authStatus",
+      "تعذّر تحميل Puter.js. تحقق من الإنترنت وأعد تحميل الصفحة.",
+      "error");
+    return;
   }
 
-  function getErrorMessage(error) {
-    if (error?.message) return error.message;
-    if (typeof error === "string") return error;
-    return "حدث خطأ غير معروف.";
-  }
+  if (isSignedIn()) {
+    let name = "";
 
-  function isSignedIn() {
     try {
-      return !!(window.puter && puter.auth.isSignedIn());
-    } catch (error) {
-      return false;
-    }
+      const user = await puter.auth.getUser();
+      if (user?.username) name = " باسم " + user.username;
+    } catch (error) {}
+
+    setStatus("authStatus",
+      "✅ تم تسجيل الدخول" + name + ". يمكنك استخدام الأدوات.",
+      "ok");
+
+    $("signInBtn").classList.add("hidden");
+    $("signOutBtn").classList.remove("hidden");
+
+  } else {
+    setStatus("authStatus",
+      "لم تسجّل الدخول بعد. اضغط الزر للمتابعة.");
+
+    $("signInBtn").classList.remove("hidden");
+    $("signOutBtn").classList.add("hidden");
+  }
+}
+
+$("signInBtn").addEventListener("click", async () => {
+  try {
+    setStatus("authStatus", "جارٍ فتح تسجيل الدخول عبر Puter…");
+    await puter.auth.signIn();
+    await refreshAuth();
+  } catch (error) {
+    setStatus("authStatus",
+      "تعذّر تسجيل الدخول: " + getErrorMessage(error),
+      "error");
+  }
+});
+
+$("signOutBtn").addEventListener("click", async () => {
+  try {
+    await puter.auth.signOut();
+    await refreshAuth();
+  } catch (error) {
+    setStatus("authStatus",
+      "تعذّر تسجيل الخروج: " + getErrorMessage(error),
+      "error");
+  }
+});
+
+function requireLogin() {
+  if (!isSignedIn()) {
+    setStatus("authStatus",
+      "سجّل الدخول أولاً لاستخدام محركات الذكاء الاصطناعي.",
+      "error");
+    return false;
+  }
+  return true;
+}
+
+/* ============================
+   معاينة صورة الفيديو
+============================ */
+
+let selectedVideoImage = null;
+
+$("videoImage").addEventListener("change", () => {
+  const file = $("videoImage").files?.[0];
+  const preview = $("videoImagePreview");
+  preview.replaceChildren();
+  selectedVideoImage = null;
+
+  if (!file) return;
+
+  if (!file.type.startsWith("image/")) {
+    setStatus("videoStatus", "اختر ملف صورة صالحًا.", "error");
+    return;
   }
 
-  async function refreshAuth() {
-    if (!window.puter) {
-      setStatus(
-        "authStatus",
-        "تعذّر تحميل Puter.js. تحقق من الإنترنت وأعد تحميل الصفحة.",
-        "error"
-      );
-      return;
-    }
+  if (file.size > 10 * 1024 * 1024) {
+    setStatus("videoStatus",
+      "حجم الصورة كبير. اختر صورة أقل من 10 ميغابايت.",
+      "error");
+    $("videoImage").value = "";
+    return;
+  }
 
-    if (isSignedIn()) {
-      let name = "";
+  selectedVideoImage = file;
 
-      try {
-        const user = await puter.auth.getUser();
+  const img = document.createElement("img");
+  img.className = "preview-image";
+  img.alt = "معاينة الصورة المرجعية";
+  img.src = URL.createObjectURL(file);
+  preview.appendChild(img);
+});
 
-        if (user?.username) {
-          name = " باسم " + user.username;
-        }
-      } catch (error) {}
+/* ============================
+   توليد الصور
+============================ */
 
-      setStatus(
-        "authStatus",
-        "✅ تم تسجيل الدخول" + name + ". يمكنك استخدام الأدوات.",
-        "ok"
-      );
+$("generateImageBtn").addEventListener("click", async () => {
+  const prompt = $("imagePrompt").value.trim();
 
-      $("signInBtn").classList.add("hidden");
-      $("signOutBtn").classList.remove("hidden");
+  if (!prompt) {
+    setStatus("imageStatus", "اكتب وصف الصورة أولاً.", "error");
+    return;
+  }
 
+  if (!requireLogin()) return;
+
+  const btn = $("generateImageBtn");
+  const output = $("imageOutput");
+  const style = $("imageStyle").value;
+  const model = $("imageModel").value;
+  const ratio = $("imageSize").value;
+
+  const finalPrompt =
+    (style ? prompt + ", " + style : prompt) +
+    `. Compose for ${ratio} aspect ratio.`;
+
+  btn.disabled = true;
+  btn.textContent = "جارٍ التوليد…";
+  output.replaceChildren();
+
+  setStatus("imageStatus",
+    "⏳ جارٍ إرسال طلب الصورة إلى Puter… قد يستغرق ذلك بعض الوقت.");
+
+  try {
+    const result = await puter.ai.txt2img(finalPrompt, {
+      model: model
+    });
+
+    let image = null;
+
+    if (result instanceof HTMLImageElement) {
+      image = result;
+    } else if (typeof result === "string") {
+      image = new Image();
+      image.src = result;
+    } else if (result && typeof result.src === "string") {
+      image = new Image();
+      image.src = result.src;
     } else {
-      setStatus(
-        "authStatus",
-        "لم تسجّل الدخول بعد. اضغط الزر للمتابعة."
-      );
-
-      $("signInBtn").classList.remove("hidden");
-      $("signOutBtn").classList.add("hidden");
-    }
-  }
-
-  $("signInBtn").addEventListener("click", async () => {
-    try {
-      setStatus("authStatus", "جارٍ فتح تسجيل الدخول عبر Puter…");
-
-      await puter.auth.signIn();
-      await refreshAuth();
-
-    } catch (error) {
-      setStatus(
-        "authStatus",
-        "تعذّر تسجيل الدخول: " + getErrorMessage(error),
-        "error"
-      );
-    }
-  });
-
-  $("signOutBtn").addEventListener("click", async () => {
-    try {
-      await puter.auth.signOut();
-      await refreshAuth();
-
-    } catch (error) {
-      setStatus(
-        "authStatus",
-        "تعذّر تسجيل الخروج: " + getErrorMessage(error),
-        "error"
-      );
-    }
-  });
-
-  function requireLogin() {
-    if (!isSignedIn()) {
-      setStatus(
-        "authStatus",
-        "سجّل الدخول أولاً لاستخدام محركات الذكاء الاصطناعي.",
-        "error"
-      );
-
-      return false;
+      throw new Error("استجابة نموذج الصور غير متوقعة.");
     }
 
-    return true;
-  }
+    image.alt = "الصورة التي تم توليدها";
+    image.style.maxWidth = "100%";
+    image.style.height = "auto";
+    image.style.borderRadius = "10px";
 
-  // ============================
-  // توليد الصور
-  // ============================
-
-  $("generateImageBtn").addEventListener("click", async () => {
-    const prompt = $("imagePrompt").value.trim();
-
-    if (!prompt) {
-      setStatus("imageStatus", "اكتب وصف الصورة أولاً.", "error");
-      return;
-    }
-
-    if (!requireLogin()) return;
-
-    const btn = $("generateImageBtn");
-    const output = $("imageOutput");
-
-    const style = $("imageStyle").value;
-    const model = $("imageModel").value;
-    const ratio = $("imageSize").value;
-
-    const finalPrompt = style
-      ? prompt + ", " + style
-      : prompt;
-
-    const [width, height] = ratio.split(":").map(Number);
-
-    btn.disabled = true;
-    btn.textContent = "جارٍ التوليد…";
-
-    output.replaceChildren();
-
-    setStatus(
-      "imageStatus",
-      "⏳ جارٍ إرسال طلب الصورة إلى Puter… قد يستغرق ذلك بعض الوقت."
-    );
-
-    try {
-      const result = await puter.ai.txt2img(finalPrompt, {
-        model: model,
-        ratio: {
-          w: width,
-          h: height
-        }
-      });
-
-      let image = null;
-
-      if (result instanceof HTMLImageElement) {
-        image = result;
-
-      } else if (typeof result === "string") {
-        image = new Image();
-        image.src = result;
-
-      } else if (result && typeof result.src === "string") {
-        image = new Image();
-        image.src = result.src;
-
-      } else {
-        throw new Error(
-          "استجابة نموذج الصور غير متوقعة. جرّب اختيار نموذج آخر."
+    if (!image.complete || !image.naturalWidth) {
+      await new Promise((resolve, reject) => {
+        image.onload = resolve;
+        image.onerror = () => reject(
+          new Error("وصلت الاستجابة لكن تعذّر تحميل الصورة.")
         );
-      }
-
-      image.alt = "الصورة التي تم توليدها";
-      image.style.maxWidth = "100%";
-      image.style.height = "auto";
-      image.style.borderRadius = "10px";
-
-      if (!image.complete || !image.naturalWidth) {
-        await new Promise((resolve, reject) => {
-          image.onload = resolve;
-
-          image.onerror = () => {
-            reject(
-              new Error("وصلت الاستجابة لكن تعذّر تحميل الصورة.")
-            );
-          };
-        });
-      }
-
-      output.appendChild(image);
-
-      if (image.src) {
-        const downloadLink = document.createElement("a");
-
-        downloadLink.className = "download";
-        downloadLink.href = image.src;
-        downloadLink.target = "_blank";
-        downloadLink.rel = "noopener";
-        downloadLink.download = "dev-workshop-image.png";
-        downloadLink.textContent = "فتح / حفظ الصورة";
-
-        output.appendChild(downloadLink);
-      }
-
-      setStatus(
-        "imageStatus",
-        "✅ اكتمل توليد الصورة. إذا لم يعمل التنزيل، افتح الصورة واضغط مطولاً لحفظها.",
-        "ok"
-      );
-
-    } catch (error) {
-      const message = getErrorMessage(error);
-
-      setStatus(
-        "imageStatus",
-        "❌ فشل توليد الصورة: " + message +
-        "\nإذا كانت الرسالة تشير إلى النموذج، جرّب اختيار نموذج آخر. وقد تكون هناك قيود استخدام على حسابك.",
-        "error"
-      );
-
-    } finally {
-      btn.disabled = false;
-      btn.textContent = "توليد صورة أخرى";
-    }
-  });
-
-  // ============================
-  // توليد أفكار الفيديو والسكريبت
-  // ============================
-
-  $("generateIdeaBtn").addEventListener("click", async () => {
-    const topic = $("videoTopic").value.trim();
-
-    if (!topic) {
-      setStatus("ideaStatus", "أدخل موضوع الفيديو أولاً.", "error");
-      return;
+      });
     }
 
-    if (!requireLogin()) return;
+    output.appendChild(image);
 
-    const btn = $("generateIdeaBtn");
-    const output = $("ideaOutput");
+    if (image.src) {
+      const link = document.createElement("a");
+      link.className = "download";
+      link.href = image.src;
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.download = "dev-workshop-image.png";
+      link.textContent = "فتح / حفظ الصورة";
+      output.appendChild(link);
+    }
 
-    const platform = $("videoPlatform").value;
-    const duration = $("videoDuration").value;
+    setStatus("imageStatus",
+      "✅ اكتمل توليد الصورة. إذا لم يعمل التنزيل، افتح الصورة واضغط مطولاً لحفظها.",
+      "ok");
 
-    btn.disabled = true;
-    btn.textContent = "جارٍ إنشاء السيناريو…";
+  } catch (error) {
+    setStatus("imageStatus",
+      "❌ فشل توليد الصورة: " + getErrorMessage(error) +
+      "\nقد يكون النموذج غير متاح لحسابك أو وصلت إلى حد الاستخدام.",
+      "error");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "توليد صورة أخرى";
+  }
+});
 
-    output.classList.add("hidden");
+/* ============================
+   توليد الفيديو
+============================ */
 
-    setStatus(
-      "ideaStatus",
-      "⏳ يكتب النموذج فكرة الفيديو والسكريبت…"
-    );
+$("generateVideoBtn").addEventListener("click", async () => {
+  const prompt = $("videoPrompt").value.trim();
 
-    const prompt = `
+  if (!prompt) {
+    setStatus("videoStatus", "اكتب وصف الفيديو والحركة أولاً.", "error");
+    return;
+  }
+
+  if (!requireLogin()) return;
+
+  const btn = $("generateVideoBtn");
+  const output = $("videoOutput");
+  const model = $("videoModel").value;
+  const seconds = Number($("videoDuration").value);
+  const resolution = $("videoResolution").value;
+  const ratio = $("videoRatio").value;
+
+  btn.disabled = true;
+  btn.textContent = "جارٍ توليد الفيديو…";
+  output.replaceChildren();
+
+  setStatus("videoStatus",
+    "⏳ بدأ طلب الفيديو. قد يستغرق التوليد عدة دقائق. لا تغلق الصفحة أثناء الانتظار.");
+
+  try {
+    const options = {
+      model: model,
+      seconds: seconds,
+      size: resolution,
+      width: ratio === "9:16" ? 720 : ratio === "1:1" ? 720 : 1280,
+      height: ratio === "9:16" ? 1280 : ratio === "1:1" ? 720 : 720
+    };
+
+    if (selectedVideoImage) {
+      options.input_reference = selectedVideoImage;
+    }
+
+    const videoResult = await puter.ai.txt2vid(prompt, options);
+
+    let videoUrl = "";
+
+    if (videoResult instanceof HTMLVideoElement) {
+      videoUrl = videoResult.src;
+    } else if (typeof videoResult === "string") {
+      videoUrl = videoResult;
+    } else if (videoResult && typeof videoResult.src === "string") {
+      videoUrl = videoResult.src;
+    }
+
+    if (!videoUrl) {
+      throw new Error("لم يرجع محرك الفيديو رابطًا صالحًا.");
+    }
+
+    const video = document.createElement("video");
+    video.src = videoUrl;
+    video.controls = true;
+    video.playsInline = true;
+    video.preload = "metadata";
+    video.style.width = "100%";
+
+    output.appendChild(video);
+
+    const link = document.createElement("a");
+    link.className = "download";
+    link.href = videoUrl;
+    link.target = "_blank";
+    link.rel = "noopener";
+    link.download = "dev-workshop-video.mp4";
+    link.textContent = "فتح / حفظ الفيديو";
+    output.appendChild(link);
+
+    setStatus("videoStatus",
+      "✅ اكتمل توليد الفيديو. افتحه أو احفظه. قد تكون بعض روابط الفيديو مؤقتة.",
+      "ok");
+
+  } catch (error) {
+    const message = getErrorMessage(error);
+
+    setStatus("videoStatus",
+      "❌ فشل توليد الفيديو: " + message +
+      "\nجرّب مدة أقصر أو دقة أقل، أو نموذجًا آخر. قد يكون النموذج غير متاح أو يتطلب رصيدًا/صلاحية في حساب Puter.",
+      "error");
+
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "🎥 توليد فيديو";
+  }
+});
+
+/* ============================
+   توليد أفكار الفيديو والسكريبت
+============================ */
+
+$("generateIdeaBtn").addEventListener("click", async () => {
+  const topic = $("videoTopic").value.trim();
+
+  if (!topic) {
+    setStatus("ideaStatus", "أدخل موضوع الفيديو أولاً.", "error");
+    return;
+  }
+
+  if (!requireLogin()) return;
+
+  const btn = $("generateIdeaBtn");
+  const output = $("ideaOutput");
+  const platform = $("videoPlatform").value;
+  const duration = $("scriptDuration").value;
+
+  btn.disabled = true;
+  btn.textContent = "جارٍ إنشاء السيناريو…";
+  output.classList.add("hidden");
+
+  setStatus("ideaStatus", "⏳ يكتب النموذج فكرة الفيديو والسكريبت…");
+
+  const prompt = `
 أنت كاتب محتوى عربي محترف.
 اكتب بالعربية الواضحة وبأسلوب عملي.
 لا تخترع حقائق أو إحصاءات.
@@ -640,54 +636,47 @@ ${topic}
 2. خطاف أول 3 ثوانٍ.
 3. تقسيم المشاهد زمنياً.
 4. نص التعليق الصوتي.
-5. اقتراحاً بصرياً.
+5. اقتراحاً بصرياً لكل مشهد.
 6. خاتمة ودعوة للتفاعل.
 `;
 
-    try {
-      const result = await puter.ai.chat(prompt, {
-        model: "gemini-2.5-flash"
-      });
+  try {
+    const result = await puter.ai.chat(prompt, {
+      model: "gemini-2.5-flash"
+    });
 
-      let content = "";
+    let content = "";
 
-      if (typeof result === "string") {
-        content = result;
-
-      } else if (result?.message?.content) {
-        content = result.message.content;
-
-      } else if (result?.text) {
-        content = result.text;
-      }
-
-      if (!content) {
-        throw new Error("أعاد النموذج استجابة فارغة.");
-      }
-
-      output.textContent = content;
-      output.classList.remove("hidden");
-
-      setStatus(
-        "ideaStatus",
-        "✅ تم إنشاء السيناريو بنجاح.",
-        "ok"
-      );
-
-    } catch (error) {
-      setStatus(
-        "ideaStatus",
-        "❌ تعذّر إنشاء السيناريو: " + getErrorMessage(error),
-        "error"
-      );
-
-    } finally {
-      btn.disabled = false;
-      btn.textContent = "إنشاء فكرة وسيناريو ذكي";
+    if (typeof result === "string") {
+      content = result;
+    } else if (result?.message?.content) {
+      content = result.message.content;
+    } else if (result?.text) {
+      content = result.text;
     }
-  });
 
-  refreshAuth();
+    if (!content) {
+      throw new Error("أعاد النموذج استجابة فارغة.");
+    }
+
+    output.textContent = content;
+    output.classList.remove("hidden");
+
+    setStatus("ideaStatus",
+      "✅ تم إنشاء السيناريو بنجاح.",
+      "ok");
+
+  } catch (error) {
+    setStatus("ideaStatus",
+      "❌ تعذّر إنشاء السيناريو: " + getErrorMessage(error),
+      "error");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "إنشاء فكرة وسيناريو ذكي";
+  }
+});
+
+refreshAuth();
 
 })();
 </script>
