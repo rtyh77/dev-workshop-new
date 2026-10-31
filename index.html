@@ -894,21 +894,25 @@ $("hfBtn").addEventListener("click", async () => {
     const client = await hfConnect();
     const ep = $("hfEndpoint").value || Object.keys(hfApi.named_endpoints)[0];
     const { handle_file } = hfLib;
-    const args = {};
-    let promptUsed = false;
+    const args = [];
+    let promptUsed = false, imgUsed = false;
 
     for (const p of hfApi.named_endpoints[ep].parameters) {
-      const name = (p.parameter_name + " " + (p.label || "")).toLowerCase();
+      const name = ((p.parameter_name || "") + " " + (p.label || "")).toLowerCase();
       const comp = (p.component || "").toLowerCase();
+      let v = p.parameter_has_default ? p.parameter_default : null;
+
       if (/image|file|video/.test(comp) && !/audio/.test(comp)) {
-        if (selectedVideoImage) args[p.parameter_name] = handle_file(selectedVideoImage);
-        else if (p.parameter_has_default) args[p.parameter_name] = p.parameter_default;
-        else args[p.parameter_name] = null;
+        const isEnd = /end|last/.test(name);
+        if (!imgUsed && !isEnd && selectedVideoImage) {
+          v = handle_file(selectedVideoImage); imgUsed = true;
+        } else if (!isEnd && !p.parameter_has_default && !selectedVideoImage) {
+          throw new Error("هذه الواجهة تتطلب صورة مرجعية (الإطار الأول). ارفع صورة في قسم «صانع الفيديو» أعلاه ثم أعد المحاولة.");
+        }
       } else if (!promptUsed && /prompt|text|desc/.test(name) && !/negative/.test(name)) {
-        args[p.parameter_name] = prompt; promptUsed = true;
-      } else if (p.parameter_has_default) {
-        args[p.parameter_name] = p.parameter_default;
+        v = prompt; promptUsed = true;
       }
+      args.push(v);
     }
 
     setStatus("hfStatus", "⏳ تم إرسال الطلب…");
