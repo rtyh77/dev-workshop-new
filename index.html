@@ -1,326 +1,113 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0d1117">
-  <title>ورشة المطور - Dev Workshop Studio</title>
-  <style>
-    :root{--bg:#0d1117;--card:#161b22;--accent:#58a6ff;--text:#c9d1d9;--muted:#8b949e;--border:#30363d;--green:#238636;--red:#f85149}
-    *{box-sizing:border-box}
-    body{font-family:system-ui,"Segoe UI",Tahoma,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:16px;line-height:1.7}
-    header{text-align:center;padding:24px 0;border-bottom:1px solid var(--border);margin:0 auto 24px;max-width:900px}
-    header h1{color:var(--accent);margin:0;font-size:clamp(1.6rem,5vw,2.2rem)}
-    header p,.muted,.note{color:var(--muted)}
-    .container{max-width:900px;margin:auto;display:grid;gap:18px}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:clamp(16px,4vw,22px);box-shadow:0 4px 12px #0003}
-    h2{color:var(--accent);font-size:1.35rem;margin:0 0 10px}
-    label{display:block;margin:12px 0 5px;font-weight:600}
-    input,textarea,select{display:block;width:100%;padding:12px;margin:7px 0;background:#0d1117;border:1px solid var(--border);color:#fff;border-radius:8px;font:inherit;min-width:0}
-    textarea{min-height:100px;resize:vertical}
-    button,.download{display:inline-block;background:var(--green);color:white;border:0;padding:12px 18px;border-radius:8px;font:inherit;font-weight:700;cursor:pointer;text-align:center;text-decoration:none}
-    button{width:100%;margin-top:12px}
-    button:hover,.download:hover{filter:brightness(1.15)}
-    button:disabled{opacity:.6;cursor:wait}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .note{font-size:.86rem;margin:5px 0}
-    .status{padding:10px;border-radius:8px;margin-top:12px;background:#0d1117;border:1px solid var(--border);white-space:pre-wrap}
-    .status.error{color:#ff7b72;border-color:#6e3030}
-    .status.ok{color:#7ee787}
-    .output-box{margin-top:14px;text-align:center}
-    .output-box img{display:block;max-width:100%;height:auto;margin:12px auto;border-radius:10px;border:1px solid var(--border)}
-    .hidden{display:none!important}
-    .idea{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:14px;text-align:right;white-space:pre-wrap}
-    .keyline{display:flex;gap:8px;align-items:center}
-    .keyline input{flex:1}
-    .smallbtn{width:auto;margin:7px 0;padding:9px 12px;background:#30363d;white-space:nowrap}
-    @media(max-width:560px){body{padding:12px}.row{grid-template-columns:1fr}.keyline{display:block}.smallbtn{width:100%}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0d1117">
+<title>ورشة المطور - Dev Workshop Studio</title>
+<style>
+:root{--bg:#0d1117;--card:#161b22;--accent:#58a6ff;--text:#c9d1d9;--muted:#8b949e;--border:#30363d;--green:#238636;--red:#f85149}
+*{box-sizing:border-box}body{font-family:system-ui,"Segoe UI",Tahoma,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:16px;line-height:1.7}
+header{text-align:center;padding:24px 0;border-bottom:1px solid var(--border);margin:0 auto 24px;max-width:900px}header h1{color:var(--accent);margin:0;font-size:clamp(1.6rem,5vw,2.2rem)}header p,.muted,.note{color:var(--muted)}
+.container{max-width:900px;margin:auto;display:grid;gap:18px}.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:clamp(16px,4vw,22px);box-shadow:0 4px 12px #0003}
+h2{color:var(--accent);font-size:1.35rem;margin:0 0 10px}label{display:block;margin:12px 0 5px;font-weight:600}
+input,textarea,select{display:block;width:100%;padding:12px;margin:7px 0;background:#0d1117;border:1px solid var(--border);color:#fff;border-radius:8px;font:inherit;min-width:0}
+textarea{min-height:100px;resize:vertical}button,.download{display:inline-block;background:var(--green);color:white;border:0;padding:12px 18px;border-radius:8px;font:inherit;font-weight:700;cursor:pointer;text-align:center;text-decoration:none}
+button{width:100%;margin-top:12px}button:hover,.download:hover{filter:brightness(1.15)}button:disabled{opacity:.6;cursor:wait}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.note{font-size:.86rem;margin:5px 0}.status{padding:10px;border-radius:8px;margin-top:12px;background:#0d1117;border:1px solid var(--border);white-space:pre-wrap;overflow-wrap:anywhere}
+.status.error{color:#ff7b72;border-color:#6e3030}.status.ok{color:#7ee787}.output-box{margin-top:14px;text-align:center}.output-box img{display:block;max-width:100%;height:auto;margin:12px auto;border-radius:10px;border:1px solid var(--border)}
+.hidden{display:none!important}.idea{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:14px;text-align:right;white-space:pre-wrap}
+.authrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.authrow button{width:auto;flex:1}.smallbtn{width:auto;margin:7px 0;padding:9px 12px;background:#30363d}
+@media(max-width:560px){body{padding:12px}.row{grid-template-columns:1fr}.authrow button{width:100%}}
+</style>
 </head>
 <body>
-<header>
-  <h1>🛠️ ورشة المطور (Dev Workshop)</h1>
-  <p>استوديو أدوات الذكاء الاصطناعي والمحتوى الرقمي</p>
-</header>
-
+<header><h1>🛠️ ورشة المطور (Dev Workshop)</h1><p>استوديو أدوات الذكاء الاصطناعي والمحتوى الرقمي</p></header>
 <main class="container">
-  <section class="card">
-    <h2>🔑 إعداد الاتصال بمحرك الذكاء الاصطناعي</h2>
-    <p>تعتمد النسخة الجديدة على واجهة Pollinations Gen ونماذج أحدث. تحتاج إلى مفتاح API خاص بك؛ لا تضع المفتاح داخل الكود أو مستودع GitHub.</p>
-    <label for="apiKey">مفتاح API</label>
-    <div class="keyline">
-      <input id="apiKey" type="password" autocomplete="off" placeholder="الصق مفتاحك هنا (sk_...)">
-      <button class="smallbtn" id="toggleKey" type="button">إظهار</button>
-    </div>
-    <p class="note">يُحفظ المفتاح في ذاكرة الجلسة الحالية فقط، ويُمسح عند إغلاق التبويب. راجع لوحة الخدمة لمعرفة الرصيد والتكلفة والحدود قبل التوليد.</p>
-    <a href="https://enter.pollinations.ai/" target="_blank" rel="noopener noreferrer" class="download">الحصول على مفتاح API</a>
-    <div id="keyStatus" class="status">لم يتم إدخال مفتاح بعد.</div>
-  </section>
-
-  <section class="card">
-    <h2>🎨 صانع الصور بالذكاء الاصطناعي</h2>
-    <p>اكتب وصف الصورة بالعربية أو الإنجليزية. للحصول على نتيجة أدق، اذكر الموضوع والمكان والإضاءة والأسلوب والتكوين.</p>
-    <label for="imagePrompt">وصف الصورة</label>
-    <textarea id="imagePrompt" placeholder="مثال: مسجد أبيض وسط كثبان الصحراء الجزائرية وقت الغروب، إضاءة سينمائية دافئة، تصوير واقعي عالي التفاصيل..."></textarea>
-    <div class="row">
-      <div>
-        <label for="imageModel">نموذج الصور</label>
-        <select id="imageModel">
-          <option value="black-forest-labs/flux.1-schnell">FLUX.1 Schnell — سريع</option>
-          <option value="google/gemini-3.1-flash-image">Gemini Flash Image — فهم متقدم للوصف</option>
-          <option value="black-forest-labs/flux.2-pro">FLUX.2 Pro — جودة أعلى (قد يكون أغلى)</option>
-        </select>
-      </div>
-      <div>
-        <label for="imageSize">أبعاد الصورة</label>
-        <select id="imageSize">
-          <option value="1024x1024">مربع 1:1</option>
-          <option value="1024x1536">عمودي 2:3</option>
-          <option value="1536x1024">أفقي 3:2</option>
-        </select>
-      </div>
-    </div>
-    <label for="imageStyle">الأسلوب (اختياري)</label>
-    <select id="imageStyle">
-      <option value="">بدون تحديد</option>
-      <option value="photorealistic, professional photography">واقعي فوتوغرافي</option>
-      <option value="cinematic lighting, cinematic composition">سينمائي</option>
-      <option value="digital illustration, highly detailed">رسم رقمي</option>
-      <option value="3D render, detailed materials">ثلاثي الأبعاد</option>
-      <option value="anime art, polished composition">أنمي</option>
-    </select>
-    <button id="generateImageBtn" type="button">توليد الصورة</button>
-    <div id="imageStatus" class="status" aria-live="polite">جاهز لاستقبال الوصف.</div>
-    <div class="output-box" id="imageOutput"></div>
-  </section>
-
-  <section class="card">
-    <h2>📝 مولّد أفكار الفيديوهات والسكريبت</h2>
-    <p>أنشئ فكرة فيديو مع عنوان جذاب ومقدمة وسيناريو وخاتمة باللغة العربية.</p>
-    <label for="videoTopic">موضوع الفيديو</label>
-    <input id="videoTopic" type="text" placeholder="مثال: أدوات ذكاء اصطناعي مجانية لصناع المحتوى">
-    <div class="row">
-      <div>
-        <label for="videoPlatform">المنصة</label>
-        <select id="videoPlatform">
-          <option>TikTok</option><option>YouTube Shorts</option><option>YouTube</option><option>Facebook</option>
-        </select>
-      </div>
-      <div>
-        <label for="videoDuration">المدة</label>
-        <select id="videoDuration">
-          <option value="30 ثانية">30 ثانية</option><option value="60 ثانية" selected>60 ثانية</option><option value="3 دقائق">3 دقائق</option><option value="5 دقائق">5 دقائق</option>
-        </select>
-      </div>
-    </div>
-    <button id="generateIdeaBtn" type="button">إنشاء فكرة وسيناريو ذكي</button>
-    <div id="ideaStatus" class="status" aria-live="polite">أدخل موضوع الفيديو للبدء.</div>
-    <div id="ideaOutput" class="idea hidden"></div>
-  </section>
+<section class="card">
+<h2>🔐 تسجيل الدخول إلى محركات الذكاء الاصطناعي</h2>
+<p>سجّل الدخول عبر Puter لاستخدام أدوات الذكاء الاصطناعي دون إدخال مفتاح API في هذا الموقع. قد تختلف النماذج والحصة المجانية حسب حسابك وسياسة الخدمة.</p>
+<div class="authrow"><button id="signInBtn" type="button">تسجيل الدخول / إنشاء حساب</button><button id="signOutBtn" class="smallbtn hidden" type="button">تسجيل الخروج</button></div>
+<div id="authStatus" class="status" aria-live="polite">جارٍ التحقق من خدمة تسجيل الدخول…</div>
+<p class="note">لا تدخل كلمة مرورك هنا. تتم المصادقة عبر Puter. استخدام النماذج يخضع لشروط وحصة حسابك.</p>
+</section>
+<section class="card">
+<h2>🎨 صانع الصور بالذكاء الاصطناعي</h2><p>اكتب وصف الصورة بالعربية أو الإنجليزية. للحصول على نتيجة أدق، اذكر الموضوع والمكان والإضاءة والأسلوب والتكوين.</p>
+<label for="imagePrompt">وصف الصورة</label><textarea id="imagePrompt" placeholder="مثال: مسجد أبيض وسط كثبان الصحراء الجزائرية وقت الغروب، إضاءة سينمائية دافئة، تصوير واقعي عالي التفاصيل..."></textarea>
+<div class="row"><div><label for="imageModel">نموذج الصور</label><select id="imageModel"><option value="gemini-2.5-flash-image">Gemini Flash Image</option><option value="gpt-image-1">GPT Image (إذا كان متاحاً لحسابك)</option></select></div>
+<div><label for="imageSize">أبعاد الصورة</label><select id="imageSize"><option value="1024x1024">مربع 1:1</option><option value="1024x1536">عمودي 2:3</option><option value="1536x1024">أفقي 3:2</option></select></div></div>
+<label for="imageStyle">الأسلوب (اختياري)</label><select id="imageStyle"><option value="">بدون تحديد</option><option value="photorealistic, professional photography">واقعي فوتوغرافي</option><option value="cinematic lighting, cinematic composition">سينمائي</option><option value="digital illustration, highly detailed">رسم رقمي</option><option value="3D render, detailed materials">ثلاثي الأبعاد</option><option value="anime art, polished composition">أنمي</option></select>
+<button id="generateImageBtn" type="button">توليد الصورة</button><div id="imageStatus" class="status" aria-live="polite">سجّل الدخول ثم اكتب وصفاً للبدء.</div><div class="output-box" id="imageOutput"></div>
+</section>
+<section class="card">
+<h2>📝 مولّد أفكار الفيديوهات والسكريبت</h2><p>أنشئ فكرة فيديو مع عنوان جذاب ومقدمة وسيناريو وخاتمة باللغة العربية.</p>
+<label for="videoTopic">موضوع الفيديو</label><input id="videoTopic" type="text" placeholder="مثال: أدوات ذكاء اصطناعي مجانية لصناع المحتوى">
+<div class="row"><div><label for="videoPlatform">المنصة</label><select id="videoPlatform"><option>TikTok</option><option>YouTube Shorts</option><option>YouTube</option><option>Facebook</option></select></div>
+<div><label for="videoDuration">المدة</label><select id="videoDuration"><option value="30 ثانية">30 ثانية</option><option value="60 ثانية" selected>60 ثانية</option><option value="3 دقائق">3 دقائق</option><option value="5 دقائق">5 دقائق</option></select></div></div>
+<button id="generateIdeaBtn" type="button">إنشاء فكرة وسيناريو ذكي</button><div id="ideaStatus" class="status" aria-live="polite">أدخل موضوع الفيديو للبدء.</div><div id="ideaOutput" class="idea hidden"></div>
+</section>
 </main>
-
+<script src="https://js.puter.com/v2/"></script>
 <script>
 (() => {
-  "use strict";
-  const $ = id => document.getElementById(id);
-  const API_BASE = "https://gen.pollinations.ai";
-  const KEY_STORE = "devWorkshopSessionKey";
-  let currentImageUrl = null;
-
-  // Keep the user's key in session memory only; never hard-code it in the public repository.
-  try {
-    const savedKey = sessionStorage.getItem(KEY_STORE);
-    if (savedKey) $("apiKey").value = savedKey;
-  } catch (_) {}
-
-  $("apiKey").addEventListener("input", () => {
-    const key = $("apiKey").value.trim();
-    try {
-      if (key) sessionStorage.setItem(KEY_STORE, key);
-      else sessionStorage.removeItem(KEY_STORE);
-    } catch (_) {}
-    $("keyStatus").textContent = key ? "تم حفظ المفتاح لهذه الجلسة فقط." : "لم يتم إدخال مفتاح بعد.";
-    $("keyStatus").className = "status";
-  });
-
-  $("toggleKey").addEventListener("click", () => {
-    const field = $("apiKey");
-    field.type = field.type === "password" ? "text" : "password";
-    $("toggleKey").textContent = field.type === "password" ? "إظهار" : "إخفاء";
-  });
-
-  function getApiKey() {
-    const key = $("apiKey").value.trim();
-    if (!key) throw new Error("أدخل مفتاح API أولاً من قسم إعداد الاتصال.");
-    return key;
+"use strict";
+const $=id=>document.getElementById(id);
+function setStatus(id,message,type=""){const el=$(id);el.textContent=message;el.className="status"+(type?" "+type:"");}
+function isSignedIn(){try{return !!(window.puter&&puter.auth.isSignedIn())}catch(e){return false}}
+async function refreshAuth(){
+ if(!window.puter){setStatus("authStatus","تعذّر تحميل Puter.js. تحقق من الإنترنت وأعد تحميل الصفحة.","error");return}
+ if(isSignedIn()){
+  let name="";try{const u=await puter.auth.getUser();if(u?.username)name=" باسم "+u.username}catch(e){}
+  setStatus("authStatus","✅ تم تسجيل الدخول"+name+". يمكنك استخدام الأدوات.","ok");
+  $("signInBtn").classList.add("hidden");$("signOutBtn").classList.remove("hidden");
+ }else{
+  setStatus("authStatus","لم تسجّل الدخول بعد. اضغط الزر للمتابعة.");
+  $("signInBtn").classList.remove("hidden");$("signOutBtn").classList.add("hidden");
+ }
+}
+$("signInBtn").addEventListener("click",async()=>{
+ try{setStatus("authStatus","جارٍ فتح تسجيل الدخول عبر Puter…");await puter.auth.signIn();await refreshAuth()}
+ catch(e){setStatus("authStatus","تعذّر تسجيل الدخول: "+(e?.message||String(e)),"error")}
+});
+$("signOutBtn").addEventListener("click",async()=>{
+ try{await puter.auth.signOut();await refreshAuth()}
+ catch(e){setStatus("authStatus","تعذّر تسجيل الخروج: "+(e?.message||String(e)),"error")}
+});
+function requireLogin(){if(!isSignedIn()){setStatus("authStatus","سجّل الدخول أولاً لاستخدام محركات الذكاء الاصطناعي.","error");return false}return true}
+$("generateImageBtn").addEventListener("click",async()=>{
+ const prompt=$("imagePrompt").value.trim();if(!prompt)return setStatus("imageStatus","اكتب وصف الصورة أولاً.","error");if(!requireLogin())return;
+ const btn=$("generateImageBtn"),out=$("imageOutput"),style=$("imageStyle").value,model=$("imageModel").value,size=$("imageSize").value;
+ const finalPrompt=(style?prompt+", "+style:prompt)+`. Compose for ${size} aspect ratio.`;
+ btn.disabled=true;btn.textContent="جارٍ التوليد…";out.replaceChildren();setStatus("imageStatus","⏳ جارٍ إرسال طلب الصورة إلى Puter…");
+ try{
+  const result=await puter.ai.txt2img(finalPrompt,{model});
+  let img=result;
+  if(!(img instanceof HTMLImageElement)){
+   if(typeof result==="string"){img=new Image();img.src=result}
+   else if(result?.src){img=result}
+   else throw new Error("أعاد المحرك نتيجة غير متوقعة.")
   }
-
-  function setStatus(id, message, type = "") {
-    const el = $(id);
-    el.textContent = message;
-    el.className = "status" + (type ? " " + type : "");
-  }
-
-  function parseSize(value) {
-    const [width, height] = value.split("x").map(Number);
-    return { width, height };
-  }
-
-  function buildImageUrl(prompt, model, size) {
-    const { width, height } = parseSize(size);
-    const url = new URL(API_BASE + "/image/" + encodeURIComponent(prompt));
-    url.searchParams.set("model", model);
-    url.searchParams.set("width", width);
-    url.searchParams.set("height", height);
-    url.searchParams.set("nologo", "true");
-    return url.toString();
-  }
-
-  function explainApiError(status, body) {
-    const text = (body || "").slice(0, 700);
-    if (status === 401 || status === 403) return `رفضت الخدمة المفتاح أو صلاحياته (HTTP ${status}). تأكد من المفتاح من لوحة Pollinations. ${text}`;
-    if (status === 402) return `رصيد الحساب غير كافٍ أو يتطلب الطلب دفعاً (HTTP 402). ${text}`;
-    if (status === 429) return `طلبات كثيرة أو حد الاستخدام بلغته (HTTP 429). انتظر قليلاً ثم أعد المحاولة. ${text}`;
-    if (status === 400) return `صيغة الطلب أو النموذج غير مقبول (HTTP 400). ${text}`;
-    return `فشل طلب الصور (HTTP ${status}). ${text || "لم ترسل الخدمة تفاصيل إضافية."}`;
-  }
-
-  $("generateImageBtn").addEventListener("click", async () => {
-    const prompt = $("imagePrompt").value.trim();
-    const output = $("imageOutput");
-    const button = $("generateImageBtn");
-    if (!prompt) return setStatus("imageStatus", "اكتب وصف الصورة أولاً.", "error");
-
-    let key;
-    try { key = getApiKey(); }
-    catch (error) { return setStatus("imageStatus", error.message, "error"); }
-
-    const style = $("imageStyle").value;
-    const finalPrompt = style ? `${prompt}, ${style}` : prompt;
-    const model = $("imageModel").value;
-    const size = $("imageSize").value;
-
-    button.disabled = true;
-    button.textContent = "جارٍ التوليد...";
-    output.replaceChildren();
-    setStatus("imageStatus", "⏳ يتم إرسال الطلب إلى محرك الصور... قد يستغرق ذلك بعض الوقت.");
-
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 180000);
-    try {
-      const imageUrl = buildImageUrl(finalPrompt, model, size);
-      const response = await fetch(imageUrl, {
-        method: "GET",
-        headers: { "Authorization": `Bearer ${key}`, "Accept": "image/*" },
-        signal: controller.signal
-      });
-      if (!response.ok) {
-        const body = await response.text().catch(() => "");
-        throw new Error(explainApiError(response.status, body));
-      }
-      const contentType = response.headers.get("content-type") || "";
-      if (!contentType.startsWith("image/")) {
-        const body = await response.text().catch(() => "");
-        throw new Error(`ردّ الخدمة ليس صورة (${contentType || "نوع غير معروف"}). ${body.slice(0,500)}`);
-      }
-      const blob = await response.blob();
-      const objectUrl = URL.createObjectURL(blob);
-      currentImageUrl = objectUrl;
-      const image = new Image();
-      image.alt = "الصورة التي تم توليدها";
-      image.onload = () => {
-        output.replaceChildren(image);
-        const download = document.createElement("a");
-        download.className = "download";
-        download.href = objectUrl;
-        download.download = "dev-workshop-image.png";
-        download.textContent = "حفظ الصورة";
-        output.appendChild(download);
-        setStatus("imageStatus", "✅ اكتمل توليد الصورة. اضغط حفظ الصورة لتنزيلها.", "ok");
-        button.disabled = false;
-        button.textContent = "توليد صورة أخرى";
-      };
-      image.onerror = () => {
-        URL.revokeObjectURL(objectUrl);
-        throw new Error("وصل ردّ ناجح لكن تعذّر عرض ملف الصورة.");
-      };
-      image.src = objectUrl;
-    } catch (error) {
-      const message = error.name === "AbortError"
-        ? "انتهت مهلة الانتظار (3 دقائق). جرّب نموذجاً أسرع أو أعد المحاولة."
-        : (error.message || "حدث خطأ غير معروف أثناء التوليد.");
-      setStatus("imageStatus", `❌ ${message}`, "error");
-      button.disabled = false;
-      button.textContent = "إعادة المحاولة";
-    } finally {
-      clearTimeout(timeout);
-    }
-  });
-
-  $("generateIdeaBtn").addEventListener("click", async () => {
-    const topic = $("videoTopic").value.trim();
-    const button = $("generateIdeaBtn");
-    const output = $("ideaOutput");
-    if (!topic) return setStatus("ideaStatus", "أدخل موضوع الفيديو أولاً.", "error");
-
-    let key;
-    try { key = getApiKey(); }
-    catch (error) { return setStatus("ideaStatus", error.message, "error"); }
-
-    button.disabled = true;
-    button.textContent = "جارٍ إنشاء السيناريو...";
-    output.classList.add("hidden");
-    setStatus("ideaStatus", "⏳ يكتب النموذج فكرة الفيديو والسكريبت...");
-
-    const platform = $("videoPlatform").value;
-    const duration = $("videoDuration").value;
-    const requestBody = {
-      model: "openai/gpt-5.4-nano",
-      messages: [
-        {
-          role: "system",
-          content: "أنت كاتب محتوى عربي محترف. اكتب بالعربية الواضحة وبأسلوب عملي ومناسب لصناع المحتوى. لا تخترع حقائق أو إحصاءات. أخرج عنواناً جذاباً، وخطاف أول 3 ثوانٍ، وتقسيماً زمنياً للمشاهد، ونص التعليق الصوتي، واقتراحاً بصرياً، وخاتمة ودعوة للتفاعل."
-        },
-        {
-          role: "user",
-          content: `أنشئ فكرة وسيناريو لفيديو عن: ${topic}\nالمنصة: ${platform}\nالمدة: ${duration}\nاجعل النص قابلاً للتنفيذ ولا تستخدم مقدمات حشو.`
-        }
-      ],
-      temperature: 0.8,
-      max_tokens: 1200
-    };
-
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 90000);
-    try {
-      const response = await fetch(API_BASE + "/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + key
-        },
-        body: JSON.stringify(requestBody),
-        signal: controller.signal
-      });
-      if (!response.ok) {
-        const detail = await response.text().catch(() => "");
-        throw new Error(`فشل الطلب (${response.status}). ${detail.slice(0, 240)}`);
-      }
-      const data = await response.json();
-      const text = data?.choices?.[0]?.message?.content;
-      if (!text) throw new Error("وصل رد غير متوقع من النموذج.");
-      output.textContent = text;
-      output.classList.remove("hidden");
-      setStatus("ideaStatus", "✅ تم إنشاء السيناريو بنجاح.", "ok");
-    } catch (error) {
-      const message = error.name === "AbortError" ? "انتهت مهلة الطلب. حاول مجدداً." : error.message;
-      setStatus("ideaStatus", "❌ " + message, "error");
-    } finally {
-      clearTimeout(timeout);
-      button.disabled = false;
-      button.textContent = "إنشاء فكرة وسيناريو ذكي";
-    }
-  });
+  img.alt="الصورة التي تم توليدها";img.style.maxWidth="100%";img.style.height="auto";img.style.borderRadius="10px";
+  if(!img.complete||!img.naturalWidth)await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=()=>reject(new Error("تعذّر تحميل الصورة الناتجة"))});
+  out.appendChild(img);
+  if(img.src){const a=document.createElement("a");a.className="download";a.href=img.src;a.target="_blank";a.rel="noopener";a.download="dev-workshop-image.png";a.textContent="فتح / حفظ الصورة";out.appendChild(a)}
+  setStatus("imageStatus","✅ اكتمل توليد الصورة. إذا لم يعمل التنزيل، افتح الصورة واضغط مطولاً لحفظها.","ok");
+ }catch(e){setStatus("imageStatus","❌ فشل توليد الصورة: "+(e?.message||String(e))+"\nقد يكون النموذج غير متاح لحسابك أو وصلت إلى حد الاستخدام.","error")}
+ finally{btn.disabled=false;btn.textContent="توليد صورة أخرى"}
+});
+$("generateIdeaBtn").addEventListener("click",async()=>{
+ const topic=$("videoTopic").value.trim();if(!topic)return setStatus("ideaStatus","أدخل موضوع الفيديو أولاً.","error");if(!requireLogin())return;
+ const btn=$("generateIdeaBtn"),out=$("ideaOutput"),platform=$("videoPlatform").value,duration=$("videoDuration").value;
+ btn.disabled=true;btn.textContent="جارٍ إنشاء السيناريو…";out.classList.add("hidden");setStatus("ideaStatus","⏳ يكتب النموذج فكرة الفيديو والسكريبت…");
+ const prompt=`أنت كاتب محتوى عربي محترف. اكتب بالعربية الواضحة وبأسلوب عملي. لا تخترع حقائق أو إحصاءات. أنشئ فكرة وسيناريو لفيديو عن: ${topic}\nالمنصة: ${platform}\nالمدة: ${duration}\nأخرج عنواناً جذاباً، خطاف أول 3 ثوانٍ، تقسيم المشاهد زمنياً، نص التعليق الصوتي، اقتراحاً بصرياً، وخاتمة ودعوة للتفاعل.`;
+ try{
+  const result=await puter.ai.chat(prompt,{model:"gemini-2.5-flash"});
+  const text=typeof result==="string"?result:(result?.message?.content||result?.text||JSON.stringify(result));
+  out.textContent=text;out.classList.remove("hidden");setStatus("ideaStatus","✅ تم إنشاء السيناريو بنجاح.","ok");
+ }catch(e){setStatus("ideaStatus","❌ تعذّر إنشاء السيناريو: "+(e?.message||String(e)),"error")}
+ finally{btn.disabled=false;btn.textContent="إنشاء فكرة وسيناريو ذكي"}
+});
+refreshAuth();
 })();
 </script>
 </body>
