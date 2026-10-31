@@ -769,7 +769,7 @@ const HF_CLIENT_ID = "";
 const GRADIO_URL = "https://esm.sh/@gradio/client@1.15.1";
 const HUB_URL = "https://esm.sh/@huggingface/hub@1.1.2";
 
-let hfToken = "", hfClient = null, hfKey = "", hfApi = null;
+let hfToken = "", hfClient = null, hfKey = "", hfApi = null, hfLib = null;
 try { hfToken = sessionStorage.getItem("hf_token") || ""; } catch (e) {}
 
 function hfUI() {
@@ -814,8 +814,41 @@ async function hfConnect() {
   const id = $("hfSpace").value.trim();
   if (!/^[\w.-]+\/[\w.-]+$/.test(id)) throw new Error("اكتب اسم الـ Space بصيغة مالك/اسم.");
   if (hfClient && hfKey === id + hfToken) return hfClient;
-  const { Client } = await import(GRADIO_URL);
-  hfClient = await Client.connect(id, hfToken ? { hf_token: hfToken } : {});
+
+  let lib;
+  try { lib = await import(GRADIO_URL); }
+  catch (e) { throw new Error("تعذّر تحميل مكتبة Gradio من esm.sh (مشكلة شبكة أو حجب)."); }
+
+  let info;
+  try {
+    const r = await fetch("https://huggingface.co/api/spaces/" + id);
+    if (r.status === 404) throw new Error("NOTFOUND");
+    info = await r.json();
+  } catch (e) {
+    throw new Error(e.message === "NOTFOUND"
+      ? "الـ Space «" + id + "» غير موجود أو خاص. تحقق من الاسم."
+      : "تعذّر الوصول إلى huggingface.co (مشكلة شبكة أو حجب).");
+  }
+
+  const stage = info?.runtime?.stage;
+  if (stage && stage !== "RUNNING") {
+    throw new Error("حالة الـ Space: " + stage + " (نائم أو متوقف أو يُبنى).\n" +
+      "افتح https://huggingface.co/spaces/" + id + " وانتظر حتى يعمل، ثم أعد المحاولة.");
+  }
+
+  const opts = hfToken ? { hf_token: hfToken } : {};
+  try {
+    hfClient = await lib.Client.connect(id, opts);
+  } catch (e) {
+    try {
+      lib = await import("https://esm.sh/@gradio/client");
+      hfClient = await lib.Client.connect(id, opts);
+    } catch (e2) {
+      throw new Error("تعذّر الاتصال بواجهة الـ Space (" + getErrorMessage(e2) +
+        ").\nقد يكون محميًا أو يمنع الاتصال من المتصفح. جرّب Space آخر.");
+    }
+  }
+  hfLib = lib;
   hfKey = id + hfToken;
   hfApi = await hfClient.view_api();
   return hfClient;
@@ -860,7 +893,7 @@ $("hfBtn").addEventListener("click", async () => {
     setStatus("hfStatus", "⏳ جارٍ الاتصال…");
     const client = await hfConnect();
     const ep = $("hfEndpoint").value || Object.keys(hfApi.named_endpoints)[0];
-    const { handle_file } = await import(GRADIO_URL);
+    const { handle_file } = hfLib;
     const args = {};
     let promptUsed = false;
 
