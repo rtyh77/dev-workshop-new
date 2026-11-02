@@ -15,7 +15,7 @@
       b.style.cssText="position:fixed;bottom:0;left:0;right:0;background:#6e3030;color:#fff;padding:8px 12px;font-size:.8rem;z-index:99;direction:ltr;white-space:pre-wrap;max-height:30vh;overflow:auto";
       (document.body||document.documentElement).appendChild(b);
     }
-    b.textContent="⚠ "+m;
+    b.textContent=(b.textContent?b.textContent+"\n":"")+"⚠ "+m;
   }
   window.addEventListener("error",function(e){show((e.message||"error")+(e.lineno?" (line "+e.lineno+")":""));});
   window.addEventListener("unhandledrejection",function(e){var r=e.reason;show("promise: "+((r&&r.message)||r));});
@@ -114,7 +114,7 @@ button:disabled{opacity:.6;cursor:wait}
 
 <header>
   <h1>🛠️ ورشة المطور (Dev Workshop)</h1>
-  <p>استوديو أدوات الذكاء الاصطناعي والمحتوى الرقمي <span class="note">· إصدار 7</span></p>
+  <p>استوديو أدوات الذكاء الاصطناعي والمحتوى الرقمي <span class="note">· إصدار 8</span></p>
 </header>
 
 <main class="container">
@@ -1376,5 +1376,3 @@ $("slideBtn").addEventListener("click", async () => {
 
     const link = document.createElement("a");
     link.className = "download";
-    link.href = url;
-    link.download
