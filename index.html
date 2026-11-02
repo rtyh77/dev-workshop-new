@@ -278,50 +278,14 @@ button:disabled{opacity:.6;cursor:wait}
   <div class="output-box" id="hfOutput"></div>
 </section>
 
-<!-- فيديو من عدة صور (مجاني) -->
+<!-- الاستوديو التلقائي (صفحة مستقلة) -->
 <section class="card">
-  <h2>🎞️ فيديو من عدة صور <span class="free">مجاني وبلا حد</span></h2>
-
+  <h2>🚀 استوديو الفيديو التلقائي <span class="free">جديد · مجاني وبلا حد</span></h2>
   <p>
-    اكتب كل مشهد في سطر مستقل، فتُولَّد له صورة مجانية ثم تُجمع المشاهد في فيديو
-    بحركة تقريب وانتقالات سلسة. يتم التركيب داخل متصفحك، فلا رصيد ولا حدود،
-    وتتحكم بطول الفيديو بعدد المشاهد. يمكنك أيضًا رفع صورك الخاصة.
-    <strong>اتجاه الفيديو يؤخذ من خيار «اتجاه الفيديو» أعلاه.</strong>
+    اكتب موضوعًا واحدًا فقط، فتُكتب المشاهد وتُولَّد صورها، ثم يُركَّب فيديو بحركة كاميرا
+    تعتمد على عمق الصورة مع تعليق صوتي وترجمة. يعمل داخل متصفحك دون رصيد أو اشتراك.
   </p>
-
-  <label for="slidePrompt">المشاهد (سطر لكل مشهد)</label>
-  <textarea id="slidePrompt"
-    placeholder="طفل يكتشف غابة سحرية وقت الفجر&#10;طفل يضع قارب ورق في جدول ماء صافٍ&#10;سنجاب وعصفور يراقبان الطفل بين الأزهار&#10;غروب ذهبي فوق الغابة"></textarea>
-
-  <label for="slideFiles">صور خاصة بك (اختياري، يمكن اختيار عدة صور)</label>
-  <input id="slideFiles" type="file" accept="image/png,image/jpeg,image/webp" multiple>
-
-  <div class="row">
-    <div>
-      <label for="slideSec">مدة كل مشهد</label>
-      <select id="slideSec">
-        <option value="3">3 ثوانٍ</option>
-        <option value="4" selected>4 ثوانٍ</option>
-        <option value="6">6 ثوانٍ</option>
-        <option value="8">8 ثوانٍ</option>
-      </select>
-    </div>
-    <div>
-      <label for="slideStyle">أسلوب الصور</label>
-      <select id="slideStyle">
-        <option value="cinematic lighting, highly detailed">سينمائي</option>
-        <option value="photorealistic, professional photography">واقعي</option>
-        <option value="anime art, studio ghibli style, painterly">أنمي</option>
-        <option value="digital illustration, vibrant colors">رسم رقمي</option>
-      </select>
-    </div>
-  </div>
-
-  <label class="chk"><input id="slideCaption" type="checkbox"> إظهار نص المشهد على الفيديو</label>
-
-  <button id="slideBtn" type="button">🎞️ إنشاء الفيديو من المشاهد</button>
-  <div id="slideStatus" class="status" aria-live="polite">اكتب المشاهد أو ارفع صورًا ثم اضغط الزر. أبقِ الصفحة مفتوحة أثناء التركيب.</div>
-  <div class="output-box" id="slideOutput"></div>
+  <a class="download" href="studio.html" style="display:block">🚀 فتح الاستوديو</a>
 </section>
 
 <!-- مولّد السيناريو -->
@@ -966,154 +930,6 @@ $("hfBtn").addEventListener("click", async () => {
       (quota ? "\n💡 انتهت حصتك المجانية اليوم. سجّل الدخول بحساب Hugging Face (إن كان متاحًا)، أو جرّب Space آخر، أو استخدم قسم «فيديو من عدة صور»."
              : "\nجرّب واجهة أخرى من القائمة أو Space آخر."), "error");
   } finally { btn.disabled = false; }
-});
-
-const VDIM = { "9:16": [540, 960], "16:9": [960, 540], "1:1": [720, 720] };
-
-function wrapText(ctx, text, maxW) {
-  const words = text.split(/\s+/), lines = [];
-  let cur = "";
-  for (const w of words) {
-    const t = cur ? cur + " " + w : w;
-    if (ctx.measureText(t).width > maxW && cur) { lines.push(cur); cur = w; }
-    else cur = t;
-  }
-  if (cur) lines.push(cur);
-  return lines.slice(0, 3);
-}
-
-function drawScene(ctx, sc, W, H, t, alpha, idx, showCap) {
-  const img = sc.img, odd = idx % 2;
-  const s = odd ? 1.15 - 0.12 * t : 1.03 + 0.12 * t;
-  const r = Math.max(W / img.width, H / img.height) * s;
-  const iw = img.width * r, ih = img.height * r;
-  const px = (odd ? -1 : 1) * (t - 0.5) * (iw - W) * 0.5;
-  ctx.globalAlpha = alpha;
-  ctx.drawImage(img, (W - iw) / 2 + px, (H - ih) / 2, iw, ih);
-  if (showCap && sc.caption) {
-    const fs = Math.round(W * 0.05);
-    ctx.font = `700 ${fs}px system-ui, Tahoma, sans-serif`;
-    ctx.direction = "rtl";
-    ctx.textAlign = "center";
-    const lines = wrapText(ctx, sc.caption, W * 0.86);
-    const lh = fs * 1.4, y0 = H - H * 0.08 - lines.length * lh;
-    ctx.fillStyle = "rgba(0,0,0,.55)";
-    ctx.fillRect(W * 0.04, y0 - lh * 0.2, W * 0.92, lines.length * lh + lh * 0.3);
-    ctx.fillStyle = "#fff";
-    lines.forEach((l, i) => ctx.fillText(l, W / 2, y0 + (i + 0.8) * lh));
-  }
-  ctx.globalAlpha = 1;
-}
-
-$("slideBtn").addEventListener("click", async () => {
-  const lines = $("slidePrompt").value.split("\n").map(s => s.trim()).filter(Boolean);
-  const files = Array.from($("slideFiles").files || []).filter(f => f.type.startsWith("image/"));
-
-  if (!lines.length && !files.length) {
-    setStatus("slideStatus", "اكتب مشهدًا واحدًا على الأقل أو ارفع صورة.", "error");
-    return;
-  }
-
-  if (!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream) {
-    setStatus("slideStatus", "متصفحك لا يدعم تسجيل الفيديو. جرّب Chrome أو Edge أو Firefox حديثًا.", "error");
-    return;
-  }
-
-  const btn = $("slideBtn");
-  const output = $("slideOutput");
-  const ratio = $("videoRatio").value;
-  const [W, H] = VDIM[ratio] || VDIM["9:16"];
-  const D = Number($("slideSec").value);
-  const style = $("slideStyle").value;
-  const showCap = $("slideCaption").checked;
-
-  btn.disabled = true;
-  btn.textContent = "جارٍ العمل…";
-  output.replaceChildren();
-
-  try {
-    const scenes = [];
-
-    for (let i = 0; i < files.length; i++) {
-      const img = await loadImg(URL.createObjectURL(files[i]), false);
-      scenes.push({ img, caption: lines[i] || "" });
-    }
-
-    for (let i = files.length; i < lines.length; i++) {
-      setStatus("slideStatus", `⏳ توليد صورة المشهد ${i + 1} من ${lines.length}…`);
-      const img = await freeImage(lines[i] + ", " + style + `, ${ratio} composition`, ratio, true);
-      scenes.push({ img, caption: lines[i] });
-    }
-
-    const canvas = document.createElement("canvas");
-    canvas.width = W; canvas.height = H;
-    const ctx = canvas.getContext("2d");
-    const mime = ["video/mp4;codecs=avc1", "video/webm;codecs=vp9", "video/webm"]
-      .find(m => MediaRecorder.isTypeSupported(m)) || "";
-    const rec = new MediaRecorder(canvas.captureStream(30),
-      mime ? { mimeType: mime, videoBitsPerSecond: 5e6 } : { videoBitsPerSecond: 5e6 });
-    const chunks = [];
-    rec.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
-    const done = new Promise(res => { rec.onstop = res; });
-
-    const total = scenes.length * D, F = 0.6;
-    rec.start(250);
-    const t0 = performance.now();
-
-    await new Promise(resolve => {
-      const frame = now => {
-        const T = Math.min((now - t0) / 1000, total);
-        const i = Math.min(Math.floor(T / D), scenes.length - 1);
-        const local = T - i * D;
-        ctx.fillStyle = "#000";
-        ctx.fillRect(0, 0, W, H);
-        if (i > 0 && local < F) {
-          drawScene(ctx, scenes[i - 1], W, H, 1, 1, i - 1, showCap);
-          drawScene(ctx, scenes[i], W, H, local / D, local / F, i, showCap);
-        } else {
-          drawScene(ctx, scenes[i], W, H, local / D, 1, i, showCap);
-        }
-        setStatus("slideStatus", `🎬 جارٍ تركيب الفيديو… ${Math.round(T / total * 100)}%\nلا تغلق الصفحة أو تغيّر التبويب.`);
-        if (T < total) requestAnimationFrame(frame); else resolve();
-      };
-      requestAnimationFrame(frame);
-    });
-
-    rec.stop();
-    await done;
-
-    const blob = new Blob(chunks, { type: (mime || "video/webm").split(";")[0] });
-    const url = URL.createObjectURL(blob);
-    const ext = blob.type.includes("mp4") ? "mp4" : "webm";
-
-    const video = document.createElement("video");
-    video.src = url;
-    video.controls = true;
-    video.playsInline = true;
-    video.style.width = "100%";
-    output.appendChild(video);
-
-    const link = document.createElement("a");
-    link.className = "download";
-    link.href = url;
-    link.download = "dev-workshop-slideshow." + ext;
-    link.textContent = "⬇️ تنزيل الفيديو";
-    output.appendChild(link);
-
-    setStatus("slideStatus",
-      `✅ تم إنشاء فيديو مدته ${total} ثانية من ${scenes.length} مشهد.` +
-      (ext === "webm" ? "\nالصيغة WebM؛ إن أردت MP4 حوّله بأي محوّل مجاني." : ""),
-      "ok");
-
-  } catch (error) {
-    setStatus("slideStatus",
-      "❌ تعذّر إنشاء الفيديو: " + getErrorMessage(error) +
-      "\nأعد المحاولة، أو قلّل عدد المشاهد، أو ارفع صورك بنفسك.",
-      "error");
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "🎞️ إنشاء الفيديو من المشاهد";
-  }
 });
 
 /* ============================
