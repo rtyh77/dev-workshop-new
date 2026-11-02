@@ -323,6 +323,33 @@ button:disabled{opacity:.6;cursor:wait}
   <div class="output-box" id="slideOutput"></div>
 </section>
 
+<!-- استوديو تلقائي -->
+<section class="card">
+  <h2>🚀 استوديو تلقائي: عمق ثلاثي + صوت + ترجمة <span class="free">مجاني وبلا حد</span></h2>
+  <p>
+    اكتب موضوعًا واحدًا فقط. يكتب الذكاء الاصطناعي المشاهد، ثم تُولَّد صورة لكل مشهد،
+    ويُستخرج لها عمق بنموذج صغير يعمل داخل متصفحك، فتتحرك الكاميرا بين المقدمة والخلفية
+    مع تعليق صوتي وترجمة. الاتجاه يؤخذ من «اتجاه الفيديو» في قسم صانع الفيديو.
+  </p>
+  <label for="autoTopic">موضوع الفيديو</label>
+  <input id="autoTopic" type="text" placeholder="مثال: رحلة طفل في غابة سحرية">
+  <div class="row">
+    <div>
+      <label for="autoCount">عدد المشاهد</label>
+      <select id="autoCount"><option>4</option><option selected>6</option><option>8</option><option>10</option></select>
+    </div>
+    <div>
+      <label for="autoSec">أقل مدة للمشهد</label>
+      <select id="autoSec"><option>4</option><option selected>5</option><option>7</option></select>
+    </div>
+  </div>
+  <label class="chk"><input id="autoVoice" type="checkbox" checked> تعليق صوتي (مجاني، قد لا يتوفر دائمًا)</label>
+  <label class="chk"><input id="autoCap" type="checkbox" checked> ترجمة على الفيديو</label>
+  <button id="autoBtn" type="button">🚀 أنشئ الفيديو كاملًا</button>
+  <div id="autoStatus" class="status" aria-live="polite">اكتب الموضوع واضغط الزر. أول مرة يُحمَّل نموذج العمق (عشرات الميغابايت). أبقِ الصفحة مفتوحة.</div>
+  <div class="output-box" id="autoOutput"></div>
+</section>
+
 <!-- مولّد السيناريو -->
 <section class="card">
   <h2>📝 مولّد أفكار الفيديوهات والسكريبت</h2>
@@ -1002,6 +1029,239 @@ function drawScene(ctx, sc, W, H, t, alpha, idx, showCap) {
   ctx.globalAlpha = 1;
 }
 
+/* ============================
+   استوديو تلقائي: سيناريو + صور + عمق + صوت
+============================ */
+
+const TF_URL = "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2";
+let depthPipe = null;
+
+async function getDepth() {
+  if (!depthPipe) {
+    const { pipeline, env } = await import(TF_URL);
+    env.allowLocalModels = false;
+    depthPipe = await pipeline("depth-estimation", "Xenova/depth-anything-small-hf");
+  }
+  return depthPipe;
+}
+
+async function askText(p) {
+  if (isSignedIn()) {
+    try {
+      const r = await puter.ai.chat(p, { model: "gemini-2.5-flash" });
+      const c = typeof r === "string" ? r : (r?.message?.content || r?.text || "");
+      if (typeof c === "string" && c) return c;
+    } catch (e) {}
+  }
+  return freeText(p);
+}
+
+async function fetchVoice(ac, text) {
+  const r = await fetch("https://text.pollinations.ai/" + encodeURIComponent(text) + "?model=openai-audio&voice=nova");
+  if (!r.ok) throw new Error("voice");
+  return ac.decodeAudioData(await r.arrayBuffer());
+}
+
+function makeGL(W, H) {
+  const c = document.createElement("canvas");
+  c.width = W; c.height = H;
+  const gl = c.getContext("webgl", { preserveDrawingBuffer: true, alpha: false });
+  if (!gl) throw new Error("متصفحك لا يدعم WebGL.");
+  const sh = (t, src) => { const o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; };
+  const pr = gl.createProgram();
+  gl.attachShader(pr, sh(gl.VERTEX_SHADER, "attribute vec2 p;varying vec2 uv;void main(){uv=vec2(p.x*.5+.5,.5-p.y*.5);gl_Position=vec4(p,0.,1.);}"));
+  gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, "precision mediump float;varying vec2 uv;uniform sampler2D im,dp;uniform vec2 off;uniform float zm,al;void main(){vec2 c=(uv-.5)/zm+.5;float d=texture2D(dp,c).r;gl_FragColor=vec4(texture2D(im,clamp(c+off*(d-.5),0.,1.)).rgb,al);}"));
+  gl.linkProgram(pr); gl.useProgram(pr);
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+  const loc = gl.getAttribLocation(pr, "p");
+  gl.enableVertexAttribArray(loc);
+  gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  gl.uniform1i(gl.getUniformLocation(pr, "im"), 0);
+  gl.uniform1i(gl.getUniformLocation(pr, "dp"), 1);
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  const U = n => gl.getUniformLocation(pr, n);
+  const tex = unit => {
+    const t = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE0 + unit);
+    gl.bindTexture(gl.TEXTURE_2D, t);
+    [gl.TEXTURE_WRAP_S, gl.TEXTURE_WRAP_T].forEach(k => gl.texParameteri(gl.TEXTURE_2D, k, gl.CLAMP_TO_EDGE));
+    [gl.TEXTURE_MIN_FILTER, gl.TEXTURE_MAG_FILTER].forEach(k => gl.texParameteri(gl.TEXTURE_2D, k, gl.LINEAR));
+    return t;
+  };
+  return {
+    canvas: c,
+    upload(sc) {
+      sc.ti = tex(0);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, sc.img);
+      sc.td = tex(1);
+      gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, sc.dw || 1, sc.dh || 1, 0,
+        gl.LUMINANCE, gl.UNSIGNED_BYTE, sc.dArr || new Uint8Array([128]));
+    },
+    clear() { gl.clearColor(0, 0, 0, 1); gl.clear(gl.COLOR_BUFFER_BIT); },
+    draw(sc, t, al, i) {
+      gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, sc.ti);
+      gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, sc.td);
+      const d = i % 2 ? -1 : 1;
+      gl.uniform2f(U("off"), d * (t - 0.5) * 0.07, (0.5 - t) * 0.02);
+      gl.uniform1f(U("zm"), 1.06 + 0.08 * (i % 2 ? 1 - t : t));
+      gl.uniform1f(U("al"), al);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    }
+  };
+}
+
+$("autoBtn").addEventListener("click", async () => {
+  const topic = $("autoTopic").value.trim();
+  if (!topic) { setStatus("autoStatus", "اكتب موضوع الفيديو أولاً.", "error"); return; }
+  if (!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream) {
+    setStatus("autoStatus", "متصفحك لا يدعم تسجيل الفيديو. جرّب Chrome حديثًا.", "error"); return;
+  }
+
+  const btn = $("autoBtn"), out = $("autoOutput");
+  const n = Number($("autoCount").value), base = Number($("autoSec").value);
+  const ratio = $("videoRatio").value;
+  const [W, H] = VDIM[ratio] || VDIM["9:16"];
+  const useVoice = $("autoVoice").checked, showCap = $("autoCap").checked;
+  const notes = [];
+
+  btn.disabled = true; btn.textContent = "جارٍ العمل…";
+  out.replaceChildren();
+
+  try {
+    setStatus("autoStatus", "✍️ جارٍ كتابة السيناريو…");
+    const raw = await askText(
+      `اكتب سيناريو فيديو قصير عن: ${topic}\nأخرج مصفوفة JSON فقط من ${n} عناصر، بلا أي نص آخر وبلا Markdown.\n` +
+      `كل عنصر: {"narration":"جملة تعليق عربية قصيرة لا تتجاوز 18 كلمة","image":"English detailed visual prompt for this scene, cinematic, no text in image"}`);
+    const m = raw.match(/\[[\s\S]*\]/);
+    if (!m) throw new Error("تعذّر فهم رد الكاتب. أعد المحاولة.");
+    const plan = JSON.parse(m[0]).filter(x => x && x.image).slice(0, n);
+    if (!plan.length) throw new Error("لم يُنتج الكاتب مشاهد صالحة. أعد المحاولة.");
+
+    const ac = new (window.AudioContext || window.webkitAudioContext)();
+    await ac.resume();
+    const dest = ac.createMediaStreamDestination();
+    const g = makeGL(W, H);
+
+    let dp = null;
+    try {
+      setStatus("autoStatus", "🧠 تحميل نموذج العمق (أول مرة فقط)…");
+      dp = await getDepth();
+    } catch (e) { notes.push("تعذّر نموذج العمق، استُخدمت حركة تقريب عادية."); }
+
+    const scenes = [];
+    for (let i = 0; i < plan.length; i++) {
+      const p = plan[i];
+      setStatus("autoStatus", `🎨 المشهد ${i + 1} من ${plan.length}: توليد الصورة والعمق والصوت…`);
+      const img = await freeImage(p.image + ", cinematic lighting, highly detailed", ratio, true);
+      const sc = { img, caption: p.narration || "", dur: base, buf: null };
+
+      if (dp) {
+        try {
+          const c = document.createElement("canvas");
+          const k = 512 / Math.max(img.width, img.height);
+          c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+          c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+          const d = (await dp(c.toDataURL("image/jpeg", 0.85))).depth;
+          const ch = d.channels || 1, arr = new Uint8Array(d.width * d.height);
+          for (let j = 0; j < arr.length; j++) arr[j] = d.data[j * ch];
+          sc.dArr = arr; sc.dw = d.width; sc.dh = d.height;
+        } catch (e) { if (!notes.some(x => x.includes("عمق"))) notes.push("تعذّر العمق لبعض المشاهد."); }
+      }
+
+      if (useVoice && sc.caption) {
+        try { sc.buf = await fetchVoice(ac, sc.caption); sc.dur = Math.max(base, sc.buf.duration + 0.5); }
+        catch (e) { if (!notes.some(x => x.includes("صوت"))) notes.push("تعذّر التعليق الصوتي المجاني، صُنع الفيديو بدون صوت."); }
+      }
+      g.upload(sc);
+      scenes.push(sc);
+    }
+
+    let acc = 0;
+    scenes.forEach(sc => { sc.start = acc; acc += sc.dur; });
+    const total = acc, F = 0.6;
+
+    const cv = document.createElement("canvas");
+    cv.width = W; cv.height = H;
+    const ctx = cv.getContext("2d");
+    const stream = cv.captureStream(30);
+    const hasAudio = scenes.some(s => s.buf);
+    if (hasAudio) dest.stream.getAudioTracks().forEach(t => stream.addTrack(t));
+    const mime = ["video/mp4", "video/webm;codecs=vp9,opus", "video/webm"].find(x => MediaRecorder.isTypeSupported(x)) || "";
+    const rec = new MediaRecorder(stream, mime ? { mimeType: mime, videoBitsPerSecond: 5e6 } : { videoBitsPerSecond: 5e6 });
+    const chunks = [];
+    rec.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+    const done = new Promise(r => { rec.onstop = r; });
+
+    rec.start(250);
+    const t0 = performance.now();
+    let played = -1;
+
+    await new Promise(resolve => {
+      const frame = now => {
+        const T = Math.min((now - t0) / 1000, total);
+        let i = scenes.length - 1;
+        while (i > 0 && scenes[i].start > T) i--;
+        const sc = scenes[i], local = T - sc.start, t = Math.min(local / sc.dur, 1);
+
+        if (i !== played) {
+          played = i;
+          if (sc.buf) { const src = ac.createBufferSource(); src.buffer = sc.buf; src.connect(dest); src.start(); }
+        }
+
+        g.clear();
+        if (i > 0 && local < F) { g.draw(scenes[i - 1], 1, 1, i - 1); g.draw(sc, t, local / F, i); }
+        else g.draw(sc, t, 1, i);
+
+        ctx.drawImage(g.canvas, 0, 0);
+        if (showCap && sc.caption) {
+          const fs = Math.round(W * 0.05);
+          ctx.font = `700 ${fs}px system-ui, Tahoma, sans-serif`;
+          ctx.direction = "rtl"; ctx.textAlign = "center";
+          const lines = wrapText(ctx, sc.caption, W * 0.86), lh = fs * 1.4;
+          const y0 = H - H * 0.08 - lines.length * lh;
+          ctx.fillStyle = "rgba(0,0,0,.55)";
+          ctx.fillRect(W * 0.04, y0 - lh * 0.2, W * 0.92, lines.length * lh + lh * 0.3);
+          ctx.fillStyle = "#fff";
+          lines.forEach((l, k) => ctx.fillText(l, W / 2, y0 + (k + 0.8) * lh));
+        }
+
+        setStatus("autoStatus", `🎬 جارٍ التركيب… ${Math.round(T / total * 100)}%\nلا تغلق الصفحة أو تغيّر التبويب.`);
+        if (T < total) requestAnimationFrame(frame); else resolve();
+      };
+      requestAnimationFrame(frame);
+    });
+
+    rec.stop();
+    await done;
+    ac.close();
+
+    const blob = new Blob(chunks, { type: (mime || "video/webm").split(";")[0] });
+    const url = URL.createObjectURL(blob);
+    const video = document.createElement("video");
+    video.src = url; video.controls = true; video.playsInline = true; video.style.width = "100%";
+    out.appendChild(video);
+    const link = document.createElement("a");
+    link.className = "download"; link.href = url;
+    link.download = "dev-workshop-studio." + (blob.type.includes("mp4") ? "mp4" : "webm");
+    link.textContent = "⬇️ تنزيل الفيديو";
+    out.appendChild(link);
+
+    setStatus("autoStatus",
+      `✅ تم إنشاء فيديو مدته ${Math.round(total)} ثانية من ${scenes.length} مشاهد.` +
+      (notes.length ? "\nملاحظات: " + notes.join(" ") : ""), "ok");
+
+  } catch (error) {
+    setStatus("autoStatus", "❌ تعذّر إنشاء الفيديو: " + getErrorMessage(error) +
+      "\nأعد المحاولة أو قلّل عدد المشاهد.", "error");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "🚀 أنشئ الفيديو كاملًا";
+  }
+});
+
 $("slideBtn").addEventListener("click", async () => {
   const lines = $("slidePrompt").value.split("\n").map(s => s.trim()).filter(Boolean);
   const files = Array.from($("slideFiles").files || []).filter(f => f.type.startsWith("image/"));
@@ -1131,85 +1391,4 @@ $("generateIdeaBtn").addEventListener("click", async () => {
   const duration = $("scriptDuration").value;
 
   btn.disabled = true;
-  btn.textContent = "جارٍ إنشاء السيناريو…";
-  output.classList.add("hidden");
-
-  setStatus("ideaStatus", "⏳ يكتب النموذج فكرة الفيديو والسكريبت…");
-
-  const prompt = `
-أنت كاتب محتوى عربي محترف.
-اكتب بالعربية الواضحة وبأسلوب عملي.
-لا تخترع حقائق أو إحصاءات.
-
-أنشئ فكرة وسيناريو لفيديو عن:
-${topic}
-
-المنصة: ${platform}
-المدة: ${duration}
-
-أخرج:
-1. عنواناً جذاباً.
-2. خطاف أول 3 ثوانٍ.
-3. تقسيم المشاهد زمنياً.
-4. نص التعليق الصوتي.
-5. اقتراحاً بصرياً لكل مشهد.
-6. خاتمة ودعوة للتفاعل.
-`;
-
-  try {
-    let content = "";
-    let source = "";
-    let note = "";
-
-    if (isSignedIn()) {
-      try {
-        const result = await puter.ai.chat(prompt, { model: "gemini-2.5-flash" });
-
-        if (typeof result === "string") {
-          content = result;
-        } else if (result?.message?.content) {
-          content = result.message.content;
-        } else if (result?.text) {
-          content = result.text;
-        }
-
-        if (!content) throw new Error("أعاد النموذج استجابة فارغة.");
-        source = "Puter";
-      } catch (error) {
-        content = "";
-        note = isBalanceError(error)
-          ? "انتهى رصيد Puter، تم التحويل للمحرك المجاني.\n"
-          : "تعذّر Puter (" + getErrorMessage(error) + ")، تم التحويل للمحرك المجاني.\n";
-      }
-    }
-
-    if (!content) {
-      setStatus("ideaStatus", note + "⏳ جارٍ الكتابة عبر المحرك المجاني…");
-      content = await freeText(prompt);
-      source = "Pollinations (مجاني)";
-    }
-
-    output.textContent = content;
-    output.classList.remove("hidden");
-
-    setStatus("ideaStatus",
-      note + "✅ تم إنشاء السيناريو بنجاح عبر " + source + ".",
-      "ok");
-
-  } catch (error) {
-    setStatus("ideaStatus",
-      "❌ تعذّر إنشاء السيناريو: " + getErrorMessage(error),
-      "error");
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "إنشاء فكرة وسيناريو ذكي";
-  }
-});
-
-refreshAuth();
-
-})();
-</script>
-
-</body>
-</html>
+  btn.textConten
