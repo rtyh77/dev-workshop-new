@@ -108,7 +108,7 @@ button:disabled{opacity:.6;cursor:wait}
 
 <header>
   <h1>🛠️ ورشة المطور (Dev Workshop)</h1>
-  <p>استوديو أدوات الذكاء الاصطناعي والمحتوى الرقمي <span class="note">· إصدار 5</span></p>
+  <p>استوديو أدوات الذكاء الاصطناعي والمحتوى الرقمي <span class="note">· إصدار 6</span></p>
 </header>
 
 <main class="container">
@@ -408,7 +408,7 @@ button:disabled{opacity:.6;cursor:wait}
 
 </main>
 
-<script src="https://js.puter.com/v2/"></script>
+
 
 <script>
 (() => {
@@ -477,6 +477,7 @@ async function refreshAuth() {
 
 $("signInBtn").addEventListener("click", async () => {
   try {
+    if (!window.puter) throw new Error("خدمة Puter لم تُحمَّل بعد. تحقق من الإنترنت وأعد تحميل الصفحة.");
     setStatus("authStatus", "جارٍ فتح تسجيل الدخول عبر Puter…");
     await puter.auth.signIn();
     await refreshAuth();
@@ -1375,8 +1376,4 @@ $("slideBtn").addEventListener("click", async () => {
 
     setStatus("slideStatus",
       `✅ تم إنشاء فيديو مدته ${total} ثانية من ${scenes.length} مشهد.` +
-      (ext === "webm" ? "\nالصيغة WebM؛ إن أردت MP4 حوّله بأي محوّل مجاني." : ""),
-      "ok");
-
-  } catch (error) {
-    setSta
+      (ext === "webm" ? "\nالصيغة WebM؛ إن أردت MP4 حوّله بأي محوّل م
