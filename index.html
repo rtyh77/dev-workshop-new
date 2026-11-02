@@ -19,6 +19,12 @@
   }
   window.addEventListener("error",function(e){show((e.message||"error")+(e.lineno?" (line "+e.lineno+")":""));});
   window.addEventListener("unhandledrejection",function(e){var r=e.reason;show("promise: "+((r&&r.message)||r));});
+  window.addEventListener("load",function(){
+    setTimeout(function(){
+      if(!window.__mainStarted) show("الكود الرئيسي لم يبدأ.\n"+navigator.userAgent);
+      else if(!window.__mainDone) show("الكود الرئيسي توقف قبل اكتماله.");
+    },1500);
+  });
 })();
 </script>
 
@@ -108,7 +114,7 @@ button:disabled{opacity:.6;cursor:wait}
 
 <header>
   <h1>🛠️ ورشة المطور (Dev Workshop)</h1>
-  <p>استوديو أدوات الذكاء الاصطناعي والمحتوى الرقمي <span class="note">· إصدار 6</span></p>
+  <p>استوديو أدوات الذكاء الاصطناعي والمحتوى الرقمي <span class="note">· إصدار 7</span></p>
 </header>
 
 <main class="container">
@@ -413,6 +419,7 @@ button:disabled{opacity:.6;cursor:wait}
 <script>
 (() => {
 "use strict";
+window.__mainStarted = true;
 
 const $ = id => document.getElementById(id);
 
@@ -1370,10 +1377,4 @@ $("slideBtn").addEventListener("click", async () => {
     const link = document.createElement("a");
     link.className = "download";
     link.href = url;
-    link.download = "dev-workshop-slideshow." + ext;
-    link.textContent = "⬇️ تنزيل الفيديو";
-    output.appendChild(link);
-
-    setStatus("slideStatus",
-      `✅ تم إنشاء فيديو مدته ${total} ثانية من ${scenes.length} مشهد.` +
-      (ext === "webm" ? "\nالصيغة WebM؛ إن أردت MP4 حوّله بأي محوّل م
+    link.download
