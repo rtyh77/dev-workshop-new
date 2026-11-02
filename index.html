@@ -5,6 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0d1117">
 <title>ورشة المطور - Dev Workshop Studio</title>
+<script>
+/* شريط أخطاء يظهر أسفل الشاشة لتشخيص أي مشكلة */
+(function(){
+  function show(m){
+    var b=document.getElementById("errBar");
+    if(!b){
+      b=document.createElement("div");b.id="errBar";
+      b.style.cssText="position:fixed;bottom:0;left:0;right:0;background:#6e3030;color:#fff;padding:8px 12px;font-size:.8rem;z-index:99;direction:ltr;white-space:pre-wrap;max-height:30vh;overflow:auto";
+      (document.body||document.documentElement).appendChild(b);
+    }
+    b.textContent="⚠ "+m;
+  }
+  window.addEventListener("error",function(e){show((e.message||"error")+(e.lineno?" (line "+e.lineno+")":""));});
+  window.addEventListener("unhandledrejection",function(e){var r=e.reason;show("promise: "+((r&&r.message)||r));});
+})();
+</script>
 
 <style>
 :root{
@@ -92,7 +108,7 @@ button:disabled{opacity:.6;cursor:wait}
 
 <header>
   <h1>🛠️ ورشة المطور (Dev Workshop)</h1>
-  <p>استوديو أدوات الذكاء الاصطناعي والمحتوى الرقمي</p>
+  <p>استوديو أدوات الذكاء الاصطناعي والمحتوى الرقمي <span class="note">· إصدار 5</span></p>
 </header>
 
 <main class="container">
@@ -1363,32 +1379,4 @@ $("slideBtn").addEventListener("click", async () => {
       "ok");
 
   } catch (error) {
-    setStatus("slideStatus",
-      "❌ تعذّر إنشاء الفيديو: " + getErrorMessage(error) +
-      "\nأعد المحاولة، أو قلّل عدد المشاهد، أو ارفع صورك بنفسك.",
-      "error");
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "🎞️ إنشاء الفيديو من المشاهد";
-  }
-});
-
-/* ============================
-   توليد أفكار الفيديو والسكريبت (Puter ثم مجاني)
-============================ */
-
-$("generateIdeaBtn").addEventListener("click", async () => {
-  const topic = $("videoTopic").value.trim();
-
-  if (!topic) {
-    setStatus("ideaStatus", "أدخل موضوع الفيديو أولاً.", "error");
-    return;
-  }
-
-  const btn = $("generateIdeaBtn");
-  const output = $("ideaOutput");
-  const platform = $("videoPlatform").value;
-  const duration = $("scriptDuration").value;
-
-  btn.disabled = true;
-  btn.textConten
+    setSta
